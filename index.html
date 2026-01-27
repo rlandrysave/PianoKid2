@@ -1,0 +1,264 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>PianoKid Evo Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+</head>
+<body>
+
+    <div id="main-menu">
+        <div class="profile-bar">
+            <div class="profile-left">
+                <button onclick="openProfileModal()" class="profile-trigger">
+                    👤 <span id="display-username">Apprenti</span>
+                </button>
+                <button onclick="toggleColorMode()" id="color-mode-btn">🎨 Debutant</button>
+                <button onclick="toggleFullScreen()" id="fs-btn">🖥️</button>
+            </div>
+            <button id="mic-toggle">🎤 Micro OFF</button>
+        </div>
+
+        <div class="logo">PianoKid Evo</div>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('cours')">COURS</button>
+            <button class="tab-btn" onclick="switchTab('exercices')">EXERCICES</button>
+            <button class="tab-btn" onclick="switchTab('apprentissage')">APPRENTISSAGE</button>
+            <button class="tab-btn" onclick="switchTab('musique')">MUSIQUES</button>
+        </div>
+
+        <div id="content-grid" class="grid"></div>
+    </div>
+
+    <div id="game-container" style="display:none;">
+        <div id="progress-container"><div id="progress-inner"></div></div>
+        <button class="btn-close" onclick="quitGame()">❌ QUITTER</button>
+        <div class="speed-controls">
+    <button onclick="setSpeed(2)">Lent🐢</button>
+    <button onclick="setSpeed(4)">Normal🚶</button>
+    <button onclick="setSpeed(7)">Rapide⚡</button>
+</div>
+        <div id="game-layout">
+            <div class="finger-guide-side left">
+                <div class="hand-flat left-hand">
+                    <div class="finger-flat pinky" data-f="5">5</div>
+                    <div class="finger-flat ring" data-f="4">4</div>
+                    <div class="finger-flat middle" data-f="3">3</div>
+                    <div class="finger-flat index" data-f="2">2</div>
+                    <div class="finger-flat thumb" data-f="1">1</div>
+                    <div class="palm-flat"></div>
+                </div>
+            </div><div id="fall-zone">
+   <div id="hit-line"></div>
+</div>
+
+            <div class="finger-guide-side right">
+                <div class="hand-flat right-hand">
+                    <div class="finger-flat thumb" data-f="1">1</div>
+                    <div class="finger-flat index" data-f="2">2</div>
+                    <div class="finger-flat middle" data-f="3">3</div>
+                    <div class="finger-flat ring" data-f="4">4</div>
+                    <div class="finger-flat pinky" data-f="5">5</div>
+                    <div class="palm-flat"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="piano-container">
+            <div id="piano"></div>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <h3>Mes Profils</h3>
+            <div id="profiles-list"></div>
+            <div class="add-profile-box" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+    <input type="text" id="input-username" placeholder="Ton prénom..." style="width: 100%; box-sizing: border-box;">
+    
+    <div style="font-size: 0.9rem; color: #888; margin-bottom: -5px;"></div>
+    <div id="emoji-picker">
+        </div>
+<div style="font-size: 0.9rem; color: #888; margin-bottom: 5px;">Type de profil :</div>
+<div style="display: flex; gap: 10px; margin: 15px 0;">
+    <button id="role-enfant" class="role-btn tab-btn active" onclick="setRole('enfant')">🧒 Enfant</button>
+    <button id="role-adulte" class="role-btn tab-btn" onclick="setRole('adulte')">👤 Adulte</button>
+</div>
+<button onclick="createNewProfile()" class="tab-btn active" style="width: 100%; background: var(--accent); color: #000; font-weight: bold;">
+    ✨ CRÉER LE PROFIL
+</button>
+<button onclick="handleGoogleAuth()" style="background:white; color:#444; border:1px solid #ddd; padding:12px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-top:10px;">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+    Continuer avec Google
+</button>
+
+<button onclick="handleLogout()" style="background:#ff4444; color:white; border:none; padding:10px; border-radius:8px; width:100%; margin-top:20px; cursor:pointer; font-weight:bold;">
+    Log Out (Déconnexion)
+</button>
+</div>
+            <button onclick="closeProfileModal()" class="tab-btn" style="width: 100%; margin-top: 10px; border-color: #ff4b2b; color: #ff4b2b; background: rgba(255, 75, 43, 0.1);">
+    ❌ ANNULER
+</button>
+        </div>
+    </div>
+
+    <!-- FENETRE DE PAIEMENT DÉPLACÉE ICI (à l'intérieur du body) -->
+    <div id="pricing-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000; justify-content:center; align-items:center; backdrop-filter: blur(10px);">
+        <div style="background:#1a1a24; padding:30px; border-radius:20px; border:2px solid var(--accent); text-align:center; max-width:400px; margin: 20px;">
+            <h2 style="color:var(--accent); margin-top:0;">Passe au niveau PRO ! 🚀</h2>
+            <p style="color:#ccc;">Débloque tous les cours, exercices et musiques.</p>
+            <div style="font-size:28px; font-weight:bold; margin:20px 0; color:white;">9,90€ <span style="font-size:14px; color:#888;">/ mois</span></div>
+            <button onclick="unlockPro()" style="background:var(--accent); color:black; border:none; padding:15px 30px; border-radius:10px; font-weight:bold; cursor:pointer; width:100%;">💳 Passer PRO</button>
+            <button onclick="closePricing()" style="background:transparent; color:#888; border:none; cursor:pointer; margin-top:15px;">Plus tard</button>
+        </div>
+    </div>
+
+<div id="auth-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:20000; justify-content:center; align-items:center; backdrop-filter: blur(8px);">
+    <div style="background:#1a1a24; padding:30px; border-radius:20px; border:2px solid #ff4b2b; text-align:center; width:320px;">
+        <h2 id="auth-title" style="color:#ff4b2b; margin-bottom:20px;">Connexion 🎹</h2>
+        
+        <input type="email" id="auth-email" placeholder="Email" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:none; background:#2a2a3a; color:white;">
+        <input type="password" id="auth-password" placeholder="Mot de passe" style="width:100%; padding:12px; margin-bottom:20px; border-radius:8px; border:none; background:#2a2a3a; color:white;">
+        
+        <button onclick="handleAuth()" id="auth-submit-btn" style="background:#ff4b2b; color:black; border:none; padding:12px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer;">Se connecter</button>
+
+        <div style="margin: 20px 0; color: #555; display: flex; align-items: center;">
+            <hr style="flex:1; border:0; border-top:1px solid #333;"> 
+            <span style="margin:0 10px; font-size: 0.8rem;">OU</span> 
+            <hr style="flex:1; border:0; border-top:1px solid #333;">
+        </div>
+
+        <button onclick="handleGoogleAuth()" style="background:white; color:#444; border:none; padding:12px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+            Continuer avec Google
+        </button>
+
+        <p style="color:#888; font-size:0.8rem; margin-top:15px;">
+            Pas de compte ? <span onclick="toggleAuthMode()" style="color:#ff4b2b; cursor:pointer; text-decoration:underline;">S'inscrire</span>
+        </p>
+        
+        <button onclick="document.getElementById('auth-modal').style.display='none'" style="background:transparent; color:#555; border:none; margin-top:10px; cursor:pointer;">Annuler</button>
+    </div>
+</div>
+
+<script type="module">
+  // 1. IMPORTATIONS
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { 
+    getAuth, 
+    onAuthStateChanged, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword, 
+    GoogleAuthProvider, 
+    signInWithPopup, 
+    signOut 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    setDoc 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // 2. CONFIGURATION (Vérifie bien que ce sont tes clés)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCmR4_oLkO-Vh4W0D2YgeemXepRt89wjc",
+    authDomain: "pianokid-evo.firebaseapp.com",
+    projectId: "pianokid-evo",
+    storageBucket: "pianokid-evo.firebasestorage.app",
+    messagingSenderId: "744883971321",
+    appId: "1:744883971321:web:a29d02fce39137e6316e28"
+  };
+
+  // 3. INITIALISATION
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  let isSignUpMode = false;
+
+  // --- FONCTION : CHANGER ENTRE CONNEXION ET INSCRIPTION ---
+  window.toggleAuthMode = () => {
+    isSignUpMode = !isSignUpMode;
+    document.getElementById('auth-title').innerText = isSignUpMode ? "Inscription 🚀" : "Connexion 🎹";
+    document.getElementById('auth-submit-btn').innerText = isSignUpMode ? "Créer un compte" : "Se connecter";
+  };
+
+  // --- FONCTION : CONNEXION / INSCRIPTION EMAIL ---
+  window.handleAuth = async () => {
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+    try {
+      if (isSignUpMode) {
+        const result = await createUserWithEmailAndPassword(auth, email, password);
+        await createFirestoreUser(result.user);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      document.getElementById('auth-modal').style.display = 'none';
+    } catch (e) { alert("Erreur : " + e.message); }
+  };
+
+  // --- FONCTION : CONNEXION GOOGLE ---
+  window.handleGoogleAuth = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      await createFirestoreUser(result.user);
+      document.getElementById('auth-modal').style.display = 'none';
+    } catch (e) { alert("Erreur Google : " + e.message); }
+  };
+
+  // --- FONCTION : DÉCONNEXION ---
+  window.handleLogout = async () => {
+    try {
+      await signOut(auth);
+      location.reload(); 
+    } catch (e) { console.error(e); }
+  };
+
+  // --- UTILITAIRE : CRÉER LE PROFIL DANS FIRESTORE ---
+  async function createFirestoreUser(user) {
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) {
+      await setDoc(userRef, {
+        email: user.email,
+        isPro: false,
+        createdAt: new Date(),
+        username: user.displayName || user.email.split('@')[0]
+      });
+    }
+  }
+
+  // --- SURVEILLANCE DU STATUT (AUTHENTIFICATION + FIRESTORE) ---
+  onAuthStateChanged(auth, async (user) => {
+    const display = document.getElementById('display-username');
+    if (user) {
+      display.innerText = (user.displayName || user.email.split('@')[0]);
+      
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        window.isPro = userSnap.data().isPro;
+        console.log("Statut PRO Firestore :", window.isPro);
+      }
+    } else {
+      display.innerText = "Invité";
+      window.isPro = false;
+    }
+    
+    // Rafraîchir l'affichage du piano
+    if (typeof switchTab === 'function') switchTab('cours');
+  });
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>

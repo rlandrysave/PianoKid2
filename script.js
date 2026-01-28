@@ -1006,7 +1006,7 @@ function unlockPro() {
     console.log("Redirection vers le checkout officiel...");
     
     // REMPLACE le lien ci-dessous par ton lien de paiement réel
-    window.location.href = "https://buy.stripe.com/votre_lien_de_paiement_officiel";
+    window.location.href = "https://buy.stripe.com/test_00w5kDcHu8tPe7P9rI7ss00";
 }
 window.handleAuth = async () => {
     const email = document.getElementById('auth-email').value;
@@ -1042,3 +1042,4 @@ window.handleAuth = async () => {
     }
 
 };
+

@@ -246,7 +246,7 @@ function unlockPro() {
 
     // Ici, tu mettras ton lien Stripe officiel
     console.log("Direction vers le paiement...");
-    window.location.href = "https://buy.stripe.com/TON_LIEN_STRIPE"; 
+    window.location.href = "https://buy.stripe.com/test_00w5kDcHu8tPe7P9rI7ss00"; 
 }
 
 
@@ -1040,4 +1040,5 @@ window.handleAuth = async () => {
         console.error("Erreur détaillée :", error);
         alert("Erreur : " + error.message);
     }
+
 };

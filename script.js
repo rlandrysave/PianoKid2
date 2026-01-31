@@ -24,36 +24,52 @@ let currentImportDifficulty = 'normal';
 let currentImportTranspose = 0;
 let selectedPartitionFile = null;
 const DATA = {
-    cours: [
+cours: [
         { titre: "1. DO - RÉ - MI (Main Droite)", diff: 'easy', notes: [{note:'C4',f:1,d:400},{note:'D4',f:2,d:400},{note:'E4',f:3,d:400},{note:'D4',f:2,d:400},{note:'C4',f:1,d:400}] },
         { titre: "2. La Main Droite complète (DO-SOL)", diff: 'easy', notes: [{note:'C4',f:1,d:400},{note:'D4',f:2,d:400},{note:'E4',f:3,d:400},{note:'F4',f:4,d:400},{note:'G4',f:5,d:400}] },
-        { titre: "3. La Main Gauche (DO3-SOL3)", diff: 'easy', notes: [
-            {note:'C3',m:'G',f:5,d:400},
-            {note:'D3',m:'G',f:4,d:400},
-            {note:'E3',m:'G',f:3,d:400},
-            {note:'F3',m:'G',f:2,d:400},
-            {note:'G3',m:'G',f:1,d:400}
-        ]},
+        { titre: "3. La Main Gauche (DO3-SOL3)", diff: 'easy', notes: [{note:'C3',m:'G',f:5,d:400},{note:'D3',m:'G',f:4,d:400},{note:'E3',m:'G',f:3,d:400},{note:'F3',m:'G',f:2,d:400},{note:'G3',m:'G',f:1,d:400}]},
         { titre: "4. Extension : Le LA (6 notes)", diff: 'easy', notes: [{note:'C4',f:1,d:400},{note:'E4',f:3,d:400},{note:'G4',f:5,d:400},{note:'A4',f:5,d:400},{note:'G4',f:4,d:400}] },
         { titre: "5. Saut d'Octave (DO3 à DO4)", diff: 'medium', notes: [{note:'C3',m:'G',f:1,d:400},{note:'C4',m:'D',f:1,d:400},{note:'C3',m:'G',f:1,d:400},{note:'C4',m:'D',f:1,d:400}] },
         { titre: "6. Accords de base (DO Majeur)", diff: 'medium', notes: [{note:'C4',f:1,d:1200},{note:'E4',f:3,d:1200},{note:'G4',f:5,d:1200}] },
         { titre: "7. Passage du Pouce (Gamme de DO)", diff: 'medium', notes: [{note:'C4',f:1,d:400},{note:'D4',f:2,d:400},{note:'E4',f:3,d:400},{note:'F4',f:1,d:400},{note:'G4',f:2,d:400},{note:'A4',f:3,d:400},{note:'B4',f:4,d:400},{note:'C5',f:5,d:400}] },
         { titre: "8. Les Touches Noires (FA#)", diff: 'hard', notes: [{note:'D4',f:1,d:400},{note:'F#4',f:3,d:400},{note:'A4',f:5,d:400}] },
         { titre: "9. Arpège Simple", diff: 'hard', notes: [{note:'C4',f:1,d:600},{note:'E4',f:2,d:600},{note:'G4',f:3,d:600},{note:'C5',f:5,d:600}] },
-        { titre: "10. Coordination des mains", diff: 'hard', notes: [{note:'C3',m:'G',f:1,d:400},{note:'C4',m:'D',f:1,d:400},{note:'E3',m:'G',f:3,d:400},{note:'E4',m:'D',f:3,d:400}] }
+        { titre: "10. Coordination des mains", diff: 'hard', notes: [{note:'C3',m:'G',f:1,d:400},{note:'C4',m:'D',f:1,d:400},{note:'E3',m:'G',f:3,d:400},{note:'E4',m:'D',f:3,d:400}] },
+        { titre: "11. Intervalles de Tierces", diff: 'medium', notes: [{note:'C4',f:1,d:400},{note:'E4',f:3,d:400},{note:'D4',f:2,d:400},{note:'F4',f:4,d:400}] },
+        { titre: "12. Accords Mineurs (LA mineur)", diff: 'medium', notes: [{note:'A3',f:1,d:1200},{note:'C4',f:2,d:1200},{note:'E4',f:4,d:1200}] },
+        { titre: "13. Main Gauche : Basse Fondamentale", diff: 'hard', notes: [{note:'C3',m:'G',f:5,d:600},{note:'G2',m:'G',f:1,d:600}] },
+        { titre: "14. Rythme : Noires et Croches", diff: 'medium', notes: [{note:'C4',f:1,d:400},{note:'D4',f:2,d:200},{note:'E4',f:3,d:200}] },
+        { titre: "15. La Gamme de SOL (avec FA#)", diff: 'hard', notes: [{note:'G4',f:1,d:400},{note:'F#4',f:4,d:400},{note:'G4',f:5,d:400}] },
+        // --- Nouveaux Cours (16-20) ---
+        { titre: "16. Le Rythme Pointé", diff: 'hard', notes: [{note:'C4',f:1,d:600},{note:'D4',f:2,d:200},{note:'E4',f:3,d:800}] },
+        { titre: "17. Accords de SOL Majeur", diff: 'medium', notes: [{note:'G3',f:1,d:1000},{note:'B3',f:3,d:1000},{note:'D4',f:5,d:1000}] },
+        { titre: "18. Renversement d'Accord", diff: 'hard', notes: [{note:'E4',f:1,d:800},{note:'G4',f:2,d:800},{note:'C5',f:5,d:800}] },
+        { titre: "19. Gamme de LA Mineur", diff: 'hard', notes: [{note:'A3',f:1,d:400},{note:'B3',f:2,d:400},{note:'C4',f:3,d:400},{note:'D4',f:1,d:400}] },
+        { titre: "20. Mains Ensemble : Octaves", diff: 'hard', notes: [{note:'C3',m:'G',f:1,d:400},{note:'C4',m:'D',f:1,d:400},{note:'D3',m:'G',f:2,d:400},{note:'D4',m:'D',f:2,d:400}] }
     ],
-    exercices: [
+exercices: [
         { titre: "1. Vélocité Hanon n°1", diff: 'medium', notes: [{note:'C4',f:1,d:300},{note:'E4',f:2,d:300},{note:'F4',f:3,d:300},{note:'G4',f:4,d:300},{note:'A4',f:5,d:300}] },
         { titre: "2. Le Crabe (Indépendance)", diff: 'medium', notes: [{note:'C4',f:1,d:300},{note:'D4',f:2,d:300},{note:'C4',f:1,d:300},{note:'E4',f:3,d:300}] },
-        { titre: "3. Force du Petit Doigt", diff: 'medium', notes: [{note:'G4',f:5,d:300},{note:'F4',f:4,d:300},{note:'G4',f:5,d:300},{note:'E4',f:3,d:300}] },
-        { titre: "4. Triolets rapides", diff: 'medium', notes: [{note:'C4',f:1,d:200},{note:'D4',f:2,d:200},{note:'E4',f:3,d:200},{note:'C4',f:1,d:200},{note:'D4',f:2,d:200},{note:'E4',f:3,d:200}] },
-        { titre: "5. Écart de Quarte", diff: 'medium', notes: [{note:'C4',f:1,d:400},{note:'F4',f:4,d:400},{note:'C4',f:1,d:400},{note:'F4',f:4,d:400}] },
-        { titre: "6. Octaves Alternées", diff: 'hard', notes: [{note:'C3',f:1,d:400},{note:'C4',f:5,d:400},{note:'D3',f:1,d:400},{note:'D4',f:5,d:400}] },
-        { titre: "7. Gamme Chromatique", diff: 'hard', notes: [{note:'C4',f:1,d:250},{note:'C#4',f:3,d:250},{note:'D4',f:1,d:250},{note:'D#4',f:3,d:250}] },
+        { titre: "3. Force du Petit Doigt", diff: 'medium', notes: [{note:'G4',f:5,d:300},{note:'F4',f:4,d:300}] },
+        { titre: "4. Triolets rapides", diff: 'medium', notes: [{note:'C4',f:1,d:200},{note:'D4',f:2,d:200},{note:'E4',f:3,d:200}] },
+        { titre: "5. Écart de Quarte", diff: 'medium', notes: [{note:'C4',f:1,d:400},{note:'F4',f:4,d:400}] },
+        { titre: "6. Octaves Alternées", diff: 'hard', notes: [{note:'C3',f:1,d:400},{note:'C4',f:5,d:400}] },
+        { titre: "7. Gamme Chromatique", diff: 'hard', notes: [{note:'C4',f:1,d:250},{note:'C#4',f:3,d:250}] },
         { titre: "8. Accords de 4 notes", diff: 'hard', notes: [{note:'C4',f:1,d:800},{note:'E4',f:2,d:800},{note:'G4',f:3,d:800},{note:'B4',f:5,d:800}] },
-        { titre: "9. Vitesse Pouce-Index", diff: 'hard', notes: [{note:'C4',f:1,d:200},{note:'D4',f:2,d:200},{note:'C4',f:1,d:200},{note:'D4',f:2,d:200}] },
-        { titre: "10. Le Grand Final", diff: 'hard', notes: [{note:'C4',f:1,d:500},{note:'G4',f:5,d:500},{note:'C5',f:1,d:500},{note:'G5',f:5,d:500}] }
-    ],
+        { titre: "9. Vitesse Pouce-Index", diff: 'hard', notes: [{note:'C4',f:1,d:200},{note:'D4',f:2,d:200}] },
+        { titre: "10. Le Grand Final", diff: 'hard', notes: [{note:'C4',f:1,d:500},{note:'G4',f:5,d:500}] },
+        { titre: "11. Tenues de notes (Doigté 1-2)", diff: 'medium', notes: [{note:'C4',f:1,d:800},{note:'D4',f:2,d:200}] },
+        { titre: "12. Articulation Legato-Staccato", diff: 'medium', notes: [{note:'C4',f:1,d:400},{note:'E4',f:1,d:100}] },
+        { titre: "13. Grand Saut (Précision C4-C5)", diff: 'hard', notes: [{note:'C4',f:1,d:300},{note:'C5',f:5,d:300}] },
+        { titre: "14. Renforcement 4ème et 5ème", diff: 'hard', notes: [{note:'F4',f:4,d:200},{note:'G4',f:5,d:200}] },
+        { titre: "15. Le Trille (Vitesse Maximale)", diff: 'hard', notes: [{note:'C4',f:2,d:150},{note:'D4',f:3,d:150}] },
+        // --- Nouveaux Exercices (16-20) ---
+        { titre: "16. Doubles Notes (Tierces)", diff: 'hard', notes: [{note:'C4',f:1,d:400},{note:'E4',f:3,d:400},{note:'D4',f:2,d:400},{note:'F4',f:4,d:400}] },
+        { titre: "17. Croisement de mains", diff: 'hard', notes: [{note:'C3',m:'G',f:1,d:400},{note:'G3',m:'D',f:1,d:400},{note:'E4',m:'G',f:1,d:400}] },
+        { titre: "18. Accords Brisés", diff: 'medium', notes: [{note:'C4',f:1,d:200},{note:'E4',f:3,d:200},{note:'G4',f:5,d:200},{note:'E4',f:3,d:200}] },
+        { titre: "19. Saut de Quinte (Précision)", diff: 'hard', notes: [{note:'C4',f:1,d:300},{note:'G4',f:5,d:300},{note:'C4',f:1,d:300}] },
+        { titre: "20. Accélération progressive", diff: 'hard', notes: [{note:'C4',d:400},{note:'D4',d:300},{note:'E4',d:200},{note:'F4',d:100}] }
+    ],,
     apprentissage: [
         { titre: "Loreen - Tattoo", diff: 'hard', notes: [{note:'A3', f:1, d:600}, {note:'C4', f:2, d:600}, {note:'E4', f:4, d:1200}, {note:'A3', f:1, d:600}, {note:'C4', f:2, d:600}, {note:'E4', f:4, d:1200}] },
         { titre: "Metallica - Nothing Else Matters", diff: 'medium', notes: [{note:'E2', f:1, d:400}, {note:'G3', f:2, d:400}, {note:'B3', f:3, d:400}, {note:'E4', f:5, d:1200}] },
@@ -1693,3 +1709,4 @@ window.openPricing = openPricing;
 window.closePricing = closePricing;
 window.unlockPro = unlockPro;
 window.quitGame = quitGame;
+

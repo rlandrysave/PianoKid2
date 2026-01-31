@@ -508,149 +508,143 @@ function getNoteColor(note) {
     return noteColors[base] || '#00f2ff';
 }
 // REMPLACEZ votre fonction createNoteEvaporation par celle-ci :
-function createNoteEvaporation(x, y, color) {
+function createNoteEvaporation(x, y, color, noteHeight) {
     const fZone = document.getElementById('fall-zone');
-    if (!fZone) return;
+    if (!fZone || !x || !y) return;
     
-    // 1. FLASH D'IMPACT (halo lumineux instantané)
-    const flash = document.createElement('div');
-    flash.style.cssText = `
-        position: absolute;
-        left: ${x}px;
-        top: ${y}px;
-        width: 4px;
-        height: 100px;
-        background: linear-gradient(to top, ${color}00, ${color}FF, ${color}00);
-        transform: translate(-50%, -50%) scaleX(0);
-        transform-origin: center;
-        pointer-events: none;
-        z-index: 55;
-        filter: blur(8px);
-        animation: impactFlash 0.3s ease-out forwards;
-    `;
-    fZone.appendChild(flash);
-    setTimeout(() => flash.remove(), 300);
+    const isLong = noteHeight > 120;
+    const points = isLong ? Math.min(6, Math.floor(noteHeight / 20)) : 1;
     
-    // 2. VAGUE D'ÉNERGIE CONCENTRIQUE
-    for(let w = 0; w < 3; w++) {
+    // 1. PARTICULES PROGRESSIVES (votre code qui marche)
+    for (let pos = 0; pos < points; pos++) {
+        const progress = pos / (points - 1 || 1);
+        const yPos = y - (noteHeight * progress * 0.9);
+        const delay = pos * 60; // Plus rapide (60ms au lieu de 80ms)
+        
+        setTimeout(() => {
+            if (!document.getElementById('fall-zone')) return;
+            
+            // Plus de particules pour les notes longues
+            const particleCount = isLong ? 8 : 5;
+            
+            for(let i = 0; i < particleCount; i++) {
+                const p = document.createElement('div');
+                const size = 2 + Math.random() * 3;
+                const spreadX = (Math.random() - 0.5) * (isLong ? 40 : 30);
+                
+                p.style.cssText = `
+                    position: absolute;
+                    left: ${x + spreadX}px;
+                    top: ${yPos}px;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${color};
+                    border-radius: 50%;
+                    box-shadow: 0 0 ${size * 2}px ${color}, 0 0 ${size * 4}px ${color}66;
+                    pointer-events: none;
+                    z-index: 60;
+                    opacity: 0;
+                    animation: riseFade ${0.5 + Math.random() * 0.3}s ease-out forwards;
+                    --rise: -${30 + Math.random() * 40}px;
+                `;
+                
+                fZone.appendChild(p);
+                setTimeout(() => { if(p.parentNode) p.remove(); }, 800);
+            }
+            
+            // 2. TRAÎNÉES VERTICALES (uniquement pour notes longues, 1 sur 2)
+            if(isLong && pos % 2 === 0) {
+                const trail = document.createElement('div');
+                trail.style.cssText = `
+                    position: absolute;
+                    left: ${x + (Math.random() - 0.5) * 20}px;
+                    top: ${yPos}px;
+                    width: 2px;
+                    height: ${30 + Math.random() * 20}px;
+                    background: linear-gradient(to top, ${color}88, transparent);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 59;
+                    opacity: 0;
+                    animation: trailUp 0.7s ease-out forwards;
+                `;
+                fZone.appendChild(trail);
+                setTimeout(() => { if(trail.parentNode) trail.remove(); }, 700);
+            }
+        }, delay);
+    }
+    
+    // 3. VAGUE LUMINEUSE qui remonte vite (pour les longues)
+    if(isLong) {
         const wave = document.createElement('div');
         wave.style.cssText = `
             position: absolute;
             left: ${x}px;
             top: ${y}px;
-            width: 10px;
-            height: 10px;
-            border: 2px solid ${color};
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
+            width: 35px;
+            height: ${noteHeight}px;
+            background: linear-gradient(to top, ${color}00, ${color}55, ${color}00);
+            transform: translate(-50%, 0);
             pointer-events: none;
-            z-index: 54;
-            box-shadow: 0 0 10px ${color}, inset 0 0 10px ${color};
+            z-index: 58;
+            filter: blur(5px);
             opacity: 0;
-            animation: energyWave 0.8s ease-out ${w * 0.15}s forwards;
+            animation: waveClimb 0.8s ease-out forwards;
         `;
         fZone.appendChild(wave);
-        setTimeout(() => wave.remove(), 1000);
+        setTimeout(() => { if(wave.parentNode) wave.remove(); }, 800);
     }
     
-    // 3. PARTICULES EXPLOSIVES (60 particules pour densité maximale)
-    const particleCount = 60;
-    
-    for (let i = 0; i < particleCount; i++) {
+    // 4. EXPLOSION AU POINT D'IMPACT (toujours)
+    for(let i = 0; i < 12; i++) {
         const p = document.createElement('div');
-        
-        // Explosion radiale puis montée
-        const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
-        const velocity = 30 + Math.random() * 50;
-        const tx = Math.cos(angle) * velocity;
-        const ty = Math.sin(angle) * velocity - 80; // Vers le haut
-        
-        const size = Math.random() > 0.7 ? 3 + Math.random() * 3 : 1 + Math.random() * 2;
-        const isSparkle = Math.random() > 0.5;
-        const duration = 0.8 + Math.random() * 0.6;
-        const delay = Math.random() * 0.1;
+        const angle = Math.random() * Math.PI;
+        const power = 20 + Math.random() * 40;
         
         p.style.cssText = `
             position: absolute;
             left: ${x}px;
             top: ${y}px;
-            width: ${size}px;
-            height: ${size}px;
-            background: ${isSparkle ? '#ffffff' : color};
-            border-radius: 50%;
-            box-shadow: 0 0 ${size * 2}px ${isSparkle ? '#ffffff' : color};
-            pointer-events: none;
-            z-index: 56;
-            opacity: 0;
-            animation: particleBurst ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s forwards;
-            --tx: ${tx}px;
-            --ty: ${ty}px;
-            --rot: ${Math.random() * 720}deg;
-        `;
-        
-        fZone.appendChild(p);
-        setTimeout(() => p.remove(), (duration + delay) * 1000);
-    }
-    
-    // 4. TRAÎNÉES LUMINEUSES (10 traînées longues)
-    for(let t = 0; t < 10; t++) {
-        const trail = document.createElement('div');
-        const angle = -Math.PI/2 + (Math.random() - 0.5) * 0.5; // Vers le haut ±30°
-        const length = 60 + Math.random() * 80;
-        const tx = Math.cos(angle) * length;
-        const ty = Math.sin(angle) * length;
-        
-        trail.style.cssText = `
-            position: absolute;
-            left: ${x}px;
-            top: ${y}px;
             width: 2px;
-            height: ${length}px;
-            background: linear-gradient(to top, ${color}FF, ${color}00);
+            height: 2px;
+            background: white;
             border-radius: 50%;
-            transform-origin: bottom center;
+            box-shadow: 0 0 4px ${color};
             pointer-events: none;
-            z-index: 53;
-            opacity: 0;
-            filter: blur(2px);
-            animation: trailShoot 0.7s ease-out ${t * 0.05}s forwards;
-            --tx: ${tx}px;
-            --ty: ${ty}px;
-            --angle: ${angle}rad;
+            z-index: 61;
+            animation: impactPop 0.4s ease-out forwards;
+            --tx: ${Math.cos(angle) * power}px;
+            --ty: ${-Math.sin(angle) * power}px;
         `;
-        
-        fZone.appendChild(trail);
-        setTimeout(() => trail.remove(), 800);
+        fZone.appendChild(p);
+        setTimeout(() => { if(p.parentNode) p.remove(); }, 400);
     }
     
-    // CSS des animations (injecté une seule fois)
-    if (!document.getElementById('premium-evap-styles')) {
-        const style = document.createElement('style');
-        style.id = 'premium-evap-styles';
-        style.textContent = `
-            @keyframes impactFlash {
-                0% { transform: translate(-50%, -50%) scaleX(0); opacity: 1; }
-                50% { transform: translate(-50%, -50%) scaleX(1); opacity: 0.8; }
-                100% { transform: translate(-50%, -50%) scaleX(2); opacity: 0; }
+    // CSS (inchangé + ajouts)
+    if (!document.getElementById('simple-evap')) {
+        const s = document.createElement('style');
+        s.id = 'simple-evap';
+        s.textContent = `
+            @keyframes riseFade {
+                0% { transform: translate(-50%, 0) scale(1); opacity: 0.9; }
+                100% { transform: translate(-50%, var(--rise)) scale(0); opacity: 0; }
             }
-            @keyframes energyWave {
-                0% { width: 10px; height: 10px; opacity: 1; border-width: 3px; }
-                100% { width: 150px; height: 150px; opacity: 0; border-width: 0px; }
+            @keyframes trailUp {
+                0% { transform: translate(-50%, 0) scaleY(1); opacity: 0.6; }
+                100% { transform: translate(-50%, -40px) scaleY(0); opacity: 0; }
             }
-            @keyframes particleBurst {
-                0% { transform: translate(-50%, -50%) translate(0, 0) scale(1); opacity: 1; }
-                50% { opacity: 0.8; }
-                100% { transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0) rotate(var(--rot)); opacity: 0; }
+            @keyframes waveClimb {
+                0% { transform: translate(-50%, 0) scaleY(0); opacity: 0.8; }
+                100% { transform: translate(-50%, -${noteHeight}px) scaleY(1); opacity: 0; }
             }
-            @keyframes trailShoot {
-                0% { transform: translate(-50%, 0) rotate(var(--angle)) scaleY(0); opacity: 1; }
-                100% { transform: translate(calc(-50% + var(--tx)), var(--ty)) rotate(var(--angle)) scaleY(1); opacity: 0; }
+            @keyframes impactPop {
+                0% { transform: translate(-50%, -50%) translate(0, 0); opacity: 1; }
+                100% { transform: translate(-50%, -50%) translate(var(--tx), var(--ty)); opacity: 0; }
             }
         `;
-        document.head.appendChild(style);
+        document.head.appendChild(s);
     }
 }
-
 // OPTIMISATION CRUCIALE : Modifiez aussi votre fonction drop() 
 // pour qu'elle soit plus fluide (remplacez votre animate) :
 
@@ -722,29 +716,30 @@ function handleKeyPress(note, isManual = false) {
         const fZone = document.getElementById('fall-zone');
         const noteElement = document.getElementById(t.id);
         
-        if(noteElement && fZone) {
-            // ==========================================
-            // ICI : Appel de l'évaporation (AJOUTEZ CECI)
-            // ==========================================
-            const noteLeft = parseInt(noteElement.style.left) || 0;
-            const noteWidth = parseInt(noteElement.style.width) || 40;
-            const centerX = noteLeft + noteWidth / 2;
-            const hitLineY = document.getElementById('hit-line')?.offsetTop || (fZone.offsetHeight - 20);
-            
-            createNoteEvaporation(centerX, hitLineY, getNoteColor(note));
-            // ==========================================
-            
-            // Effet diamant qui s'active puis devient fantôme
-            noteElement.style.transition = 'all 0.3s ease';
-            noteElement.style.opacity = '0.9';
-            noteElement.style.filter = 'brightness(1.3) saturate(1.2)';
-            
-            setTimeout(() => {
-                noteElement.style.opacity = '0.15';
-                noteElement.style.filter = 'brightness(0.8)';
-                noteElement.style.zIndex = '1';
-            }, 300);
-        }
+// Dans handleKeyPress, remplacez l'appel par :
+if(noteElement && fZone) {
+    const noteLeft = parseInt(noteElement.style.left) || 0;
+    const noteWidth = parseInt(noteElement.style.width) || 40;
+    const centerX = noteLeft + noteWidth / 2;
+    const hitLineY = document.getElementById('hit-line')?.offsetTop || (fZone.offsetHeight - 20);
+    
+    // Récupérer la hauteur de la note depuis l'objet t (o.h)
+    const noteHeight = t.h || 80;
+    
+    // Évaporation adaptée à la longueur
+    createNoteEvaporation(centerX, hitLineY, getNoteColor(note), noteHeight);
+    
+    // Dissolution visuelle de la note elle-même
+    noteElement.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    noteElement.style.opacity = '0.1';
+    noteElement.style.transform = 'scale(0.95)';
+    noteElement.style.zIndex = '1';
+    
+    // Nettoyer après
+    setTimeout(() => {
+        noteElement.style.willChange = 'auto';
+    }, 1000);
+}
         
         // Libérer la pause en mode step
         isPaused = false; 

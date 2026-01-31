@@ -889,4 +889,127 @@ body.mono-color .key.active {
     opacity: 0.2 !important;
     transition: opacity 0.5s ease !important;
     z-index: 1 !important;
+}@keyframes impactPop {
+    0% { 
+        transform: translate(0, 0) scale(1); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: translate(var(--tx), var(--ty)) scale(0); 
+        opacity: 0; 
+    }
+}/* Note validée (succès) */
+.falling-note[style*="box-shadow"] {
+    /* Cela permet d'enlever les bordures ternes quand la note brille */
+    border: 2px solid white !important;
+}/* Onde de choc circulaire */
+.impact-ring {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 4px solid white;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 99;
+    animation: ringExplode 0.5s ease-out forwards;
+}
+
+@keyframes ringExplode {
+    0% { width: 20px; height: 20px; opacity: 1; border-width: 4px; }
+    100% { width: 150px; height: 150px; opacity: 0; border-width: 0px; }
+}
+
+/* Particules d'éclat */
+.magic-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 100;
+    animation: particleFly 0.6s cubic-bezier(0, .9, .57, 1) forwards;
+}
+
+@keyframes particleFly {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
+}
+
+/* Vague montante pour notes longues */
+.wave-climb {
+    position: absolute;
+    width: 40px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 58;
+    filter: blur(8px);
+    animation: waveRise 0.8s ease-out forwards;
+}
+
+@keyframes waveRise {
+    0% { transform: translate(-50%, 0) scaleY(0); opacity: 0.8; }
+    100% { transform: translate(-50%, -100%) scaleY(1.2); opacity: 0; }
+}/* La bulle qui monte et grossit */
+.note-glow-up {
+    position: absolute;
+    height: 20px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 60;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen; /* Pour un effet de lumière intense */
+    animation: glowRiseAndGrow 0.8s ease-out forwards;
+}
+
+@keyframes glowRiseAndGrow {
+    0% {
+        transform: translate(-50%, 0) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        /* Elle remonte la hauteur de la note et devient énorme */
+        transform: translate(-50%, calc(-1 * var(--travel-height))) scale(calc(var(--final-size) / 10));
+        opacity: 0;
+    }
+}
+
+/* Les petites étincelles qui fusent vers le haut */
+.rising-spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 61;
+    animation: sparkFlyUp linear forwards;
+}
+
+@keyframes sparkFlyUp {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        /* Mouvement de zigzag vers le haut */
+        transform: translate(var(--drift-x), calc(-1 * var(--up-dist))) scale(0);
+        opacity: 0;
+    }
+}.note-steam {
+    position: absolute;
+    width: 10px;
+    height: 30px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 55;
+    animation: steamRise 0.8s ease-out forwards;
+}
+
+@keyframes steamRise {
+    0% { transform: translate(-50%, 0) scale(1); opacity: 0.8; filter: blur(2px); }
+    100% { transform: translate(-50%, -120px) scale(2); opacity: 0; filter: blur(8px); }
 }

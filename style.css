@@ -1012,4 +1012,120 @@ body.mono-color .key.active {
 @keyframes steamRise {
     0% { transform: translate(-50%, 0) scale(1); opacity: 0.8; filter: blur(2px); }
     100% { transform: translate(-50%, -120px) scale(2); opacity: 0; filter: blur(8px); }
+}@keyframes shockwaveExpand {
+    0% { width: 10px; height: 10px; opacity: 1; border-width: 3px; }
+    100% { width: 200px; height: 200px; opacity: 0; border-width: 0px; }
+}
+
+/* Assurer que les éléments d'évaporation sont visibles */
+.note-glow-up {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 60;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+    animation: glowRiseAndGrow 0.8s ease-out forwards;
+}
+
+.rising-spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 61;
+    animation: sparkFlyUp linear forwards;
+}/* Noyau qui pulse et s'efface */
+@keyframes coreEvaporate {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+    100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+}/* Bulle qui monte et s'élargit */
+@keyframes steamBubble {
+    0% { 
+        transform: translate(-50%, 0) scale(0.6); 
+        opacity: 0.9; 
+    }
+    100% { 
+        transform: translate(calc(-50% + var(--drift-x)), var(--rise-h)) scale(1.8); 
+        opacity: 0; 
+    }
+}
+
+/* Filament qui s'élance */
+@keyframes filamentRise {
+    0% { 
+        transform: rotate(var(--angle)) scaleY(0); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: rotate(var(--angle)) scaleY(1.2) translateY(-30px); 
+        opacity: 0; 
+    }
+}/* Grosse bulle floue d'ambiance */
+@keyframes steamBig {
+    0% { transform: translate(calc(-50% + var(--drift)), 0) scale(1); opacity: 0.5; }
+    100% { transform: translate(calc(-50% + var(--drift)), var(--rise)) scale(4); opacity: 0; }
+}
+
+/* Étincelle rapide */
+@keyframes steamSpark {
+    0% { transform: translate(calc(-50% + var(--drift-s)), 0) scaleY(1); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--drift-s)), var(--rise-s)) scaleY(0.5); opacity: 0; }
+}
+
+/* Filament ondulant */
+@keyframes steamWisp {
+    0% { transform: translate(-50%, 0) rotate(0deg); opacity: 0.8; }
+    50% { transform: translate(calc(-50% + var(--curve) * 0.5), calc(var(--rise-w) * 0.5)) rotate(5deg); }
+    100% { transform: translate(calc(-50% + var(--curve)), var(--rise-w)) rotate(0deg); opacity: 0; }
+}
+
+/* Poussière micro */
+@keyframes steamDust {
+    0% { transform: translate(-50%, 0); opacity: 0.9; }
+    100% { transform: translate(calc(-50% + var(--drift-d)), var(--rise-d)); opacity: 0; }
+}@keyframes lineFlash {
+    0% { transform: translate(-50%, -50%) scaleX(0.5); opacity: 1; filter: brightness(2); }
+    100% { transform: translate(-50%, -50%) scaleX(2); opacity: 0; filter: brightness(1); }
+}#hit-line {
+    position: absolute !important;
+    bottom: 0px !important;
+    width: 100% !important;
+    height: 4px !important;
+    background: linear-gradient(90deg, transparent, #fff, #00ffff, #fff, transparent) !important;
+    box-shadow: 0 0 20px var(--accent), 0 0 40px #ff00ff !important;
+    z-index: 99999 !important;
+    animation: hitline-pulse 1s infinite !important;
+    pointer-events: none;
+}
+
+@keyframes hitline-pulse {
+    0%, 100% { 
+        opacity: 0.8; 
+        box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+    }
+    50% { 
+        opacity: 1; 
+        box-shadow: 0 0 30px #00ffff, 0 0 60px #00ffff, 0 0 90px #00ffff;
+    }
+}
+
+/* Animation pour le flash ponctuel */
+@keyframes lineFlash {
+    0% { 
+        transform: translate(-50%, -50%) scaleX(0.3); 
+        opacity: 1; 
+        filter: brightness(2);
+    }
+    50% {
+        transform: translate(-50%, -50%) scaleX(1.5); 
+        opacity: 0.8;
+    }
+    100% { 
+        transform: translate(-50%, -50%) scaleX(3); 
+        opacity: 0; 
+        filter: brightness(1);
+    }
 }

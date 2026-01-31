@@ -844,126 +844,424 @@ function getNoteColor(note) {
     const base = note.replace(/[0-9#]/g, '');
     return noteColors[base] || '#00f2ff';
 }
-
 function createNoteEvaporation(x, y, color, noteHeight) {
     const fZone = document.getElementById('fall-zone');
     if (!fZone || !x || !y) return;
     
     const isLong = noteHeight > 100;
-    const dynamicSize = isLong ? Math.min(100, noteHeight / 1.5) : 40;
+    const intensity = isLong ? 1.3 : 1;
 
-    // 1. BULLE D'ÉNERGIE PRINCIPALE
-    const glow = document.createElement('div');
-    glow.className = 'note-glow-up';
-    glow.style.left = x + 'px';
-    glow.style.top = y + 'px';
-    glow.style.width = '20px';
-    glow.style.backgroundColor = color;
-    glow.style.boxShadow = `0 0 ${dynamicSize}px ${color}`;
-    
-    glow.style.setProperty('--travel-height', `${noteHeight}px`);
-    glow.style.setProperty('--final-size', `${dynamicSize}px`);
+    // 1. NOYAU LUMINEUX CENTRAL (pulse et monte légèrement)
+    const core = document.createElement('div');
+    core.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        width: ${25 * intensity}px;
+        height: ${25 * intensity}px;
+        background: radial-gradient(circle, white 0%, ${color} 50%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 100;
+        filter: blur(1px);
+        animation: coreEvaporate ${0.8 + intensity * 0.3}s ease-out forwards;
+    `;
+    fZone.appendChild(core);
+    setTimeout(() => core.remove(), 1100);
 
-    fZone.appendChild(glow);
-    setTimeout(() => glow.remove(), 1000);
+    // 2. COLONNE DE LUMIÈRE ASCENDANTE (traînée verticale)
+    const column = document.createElement('div');
+    column.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        width: ${15 * intensity}px;
+        height: ${noteHeight * 0.8}px;
+        background: linear-gradient(to top, ${color}dd, ${color}66, transparent);
+        transform: translate(-50%, -100%);
+        pointer-events: none;
+        z-index: 95;
+        filter: blur(4px);
+        opacity: 0.8;
+        animation: columnRise ${0.6 + intensity * 0.2}s ease-out forwards;
+    `;
+    fZone.appendChild(column);
+    setTimeout(() => column.remove(), 800);
 
-    // 2. ÉTINCELLES ASCENDANTES
-    const particleCount = isLong ? 15 : 8;
-    for (let i = 0; i < particleCount; i++) {
-        const p = document.createElement('div');
-        p.className = 'rising-spark';
-        p.style.left = (x + (Math.random() - 0.5) * 40) + 'px';
-        p.style.top = y + 'px';
-        p.style.backgroundColor = 'white';
-        p.style.boxShadow = `0 0 10px ${color}`;
+    // 3. ÉTINCELLES ASCENDANTES SEULEMENT (pas de dispersion latérale)
+    const sparkCount = Math.floor((isLong ? 16 : 8) * intensity);
+    for (let i = 0; i < sparkCount; i++) {
+        const spark = document.createElement('div');
+        const size = 3 + Math.random() * 4;
         
-        const duration = 0.5 + Math.random() * 0.5;
-        const drift = (Math.random() - 0.5) * 50;
+        // Légère dispersion pour l'effet naturel mais principalement vertical
+        const drift = (Math.random() - 0.5) * 20; // Très léger (max 10px de côté)
+        const upDist = noteHeight + 30 + Math.random() * 80;
+        const duration = 0.7 + Math.random() * 0.5;
+        const delay = Math.random() * 0.1;
         
-        p.style.setProperty('--up-dist', `${noteHeight + 50}px`);
-        p.style.setProperty('--drift-x', `${drift}px`);
-        p.style.animationDuration = duration + 's';
+        spark.style.cssText = `
+            position: absolute;
+            left: ${x + drift}px;
+            top: ${y}px;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${Math.random() > 0.4 ? color : '#fff'};
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 98;
+            box-shadow: 0 0 ${size * 2}px ${color};
+            animation: sparkRise ${duration}s ease-out ${delay}s forwards;
+        `;
+        
+        spark.style.setProperty('--up-dist', `${upDist}px`);
+        
+        fZone.appendChild(spark);
+        setTimeout(() => spark.remove(), (duration + delay) * 1000);
+    }
 
-        fZone.appendChild(p);
-        setTimeout(() => p.remove(), duration * 1000);
+    // 4. VAPORÉE/BRUME (effet de fumée montante)
+    const vaporCount = isLong ? 3 : 1;
+    for (let i = 0; i < vaporCount; i++) {
+        setTimeout(() => {
+            const vapor = document.createElement('div');
+            vapor.style.cssText = `
+                position: absolute;
+                left: ${x}px;
+                top: ${y - 20}px;
+                width: ${30 + i * 10}px;
+                height: ${40 + i * 10}px;
+                background: radial-gradient(ellipse, ${color}40, transparent);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 94;
+                filter: blur(8px);
+                animation: vaporRise ${1 + i * 0.3}s ease-out forwards;
+            `;
+            fZone.appendChild(vapor);
+            setTimeout(() => vapor.remove(), 1300 + i * 300);
+        }, i * 100);
     }
 }
-
+function startNoteSteam(x, color, duration, noteHeight) {
+    const fZone = document.getElementById('fall-zone');
+    if (!fZone) return;
+    
+    const isLong = noteHeight > 100;
+    const startTime = Date.now();
+    
+    // Émetteur plus large
+    const emitter = document.createElement('div');
+    emitter.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${window.innerHeight - 180}px;
+        width: 60px;
+        height: 30px;
+        pointer-events: none;
+        z-index: 90;
+        transform: translateX(-50%);
+    `;
+    fZone.appendChild(emitter);
+    
+    // Intervalle rapide (25ms) + spawn multiple = densité maximale
+    const particleInterval = setInterval(() => {
+        if (Date.now() - startTime >= duration) {
+            clearInterval(particleInterval);
+            emitter.style.transition = 'opacity 0.3s';
+            emitter.style.opacity = '0';
+            setTimeout(() => emitter.remove(), 300);
+            return;
+        }
+        
+        // 1. GROSSE BULLE FLOUE (arrière-plan, ambiance)
+        if (Math.random() > 0.6) {
+            const big = document.createElement('div');
+            const size = 25 + Math.random() * 20;
+            big.style.cssText = `
+                position: absolute;
+                left: ${50 + (Math.random() - 0.5) * 40}%;
+                bottom: 0;
+                width: ${size}px;
+                height: ${size}px;
+                background: radial-gradient(circle, ${color}33, transparent);
+                border-radius: 50%;
+                filter: blur(6px);
+                pointer-events: none;
+                z-index: 89;
+                animation: steamBig ${1.2 + Math.random() * 0.8}s ease-out forwards;
+            `;
+            big.style.setProperty('--rise', `-${80 + Math.random() * 120}px`);
+            big.style.setProperty('--drift', `${(Math.random() - 0.5) * 60}px`);
+            emitter.appendChild(big);
+            setTimeout(() => big.remove(), 2000);
+        }
+        
+        // 2. BULLE PRINCIPALE COLOREE (toujours)
+        const bubble = document.createElement('div');
+        const size = (8 + Math.random() * 15) * (isLong ? 1.3 : 1);
+        bubble.style.cssText = `
+            position: absolute;
+            left: ${50 + (Math.random() - 0.5) * 30}%;
+            bottom: ${Math.random() * 10}px;
+            width: ${size}px;
+            height: ${size}px;
+            background: radial-gradient(circle, ${color}ff 0%, ${color}88 50%, transparent 70%);
+            border: 1px solid ${color};
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: 95;
+            animation: steamBubble ${0.6 + Math.random() * 0.5}s ease-out forwards;
+        `;
+        bubble.style.setProperty('--rise-h', `-${60 + Math.random() * 100}px`);
+        bubble.style.setProperty('--drift-x', `${(Math.random() - 0.5) * 40}px`);
+        emitter.appendChild(bubble);
+        setTimeout(() => bubble.remove(), 1100);
+        
+        // 3. BULLE SECONDAIRE (tinction blanche, toujours)
+        const bubble2 = document.createElement('div');
+        const size2 = (5 + Math.random() * 10) * (isLong ? 1.2 : 1);
+        bubble2.style.cssText = `
+            position: absolute;
+            left: ${50 + (Math.random() - 0.5) * 25}%;
+            bottom: 5px;
+            width: ${size2}px;
+            height: ${size2}px;
+            background: radial-gradient(circle, white, ${color}44);
+            border-radius: 50%;
+            filter: blur(0.5px);
+            pointer-events: none;
+            z-index: 96;
+            animation: steamBubble ${0.5 + Math.random() * 0.4}s ease-out forwards;
+        `;
+        bubble2.style.setProperty('--rise-h', `-${50 + Math.random() * 80}px`);
+        bubble2.style.setProperty('--drift-x', `${(Math.random() - 0.5) * 30}px`);
+        emitter.appendChild(bubble2);
+        setTimeout(() => bubble2.remove(), 900);
+        
+        // 4. ÉTINCELLE RAPIDE (fréquente)
+        if (Math.random() > 0.3) {
+            const spark = document.createElement('div');
+            spark.style.cssText = `
+                position: absolute;
+                left: ${50 + (Math.random() - 0.5) * 20}%;
+                bottom: 0;
+                width: 2px;
+                height: ${12 + Math.random() * 15}px;
+                background: linear-gradient(to top, ${color}, white, transparent);
+                box-shadow: 0 0 8px ${color}, 0 0 4px white;
+                pointer-events: none;
+                z-index: 98;
+                animation: steamSpark ${0.3 + Math.random() * 0.3}s linear forwards;
+            `;
+            spark.style.setProperty('--rise-s', `-${40 + Math.random() * 60}px`);
+            spark.style.setProperty('--drift-s', `${(Math.random() - 0.5) * 20}px`);
+            emitter.appendChild(spark);
+            setTimeout(() => spark.remove(), 600);
+        }
+        
+        // 5. FILAMENT ONDULANT (occasionnel)
+        if (Math.random() > 0.5) {
+            const filament = document.createElement('div');
+            filament.style.cssText = `
+                position: absolute;
+                left: ${50 + (Math.random() - 0.5) * 35}%;
+                bottom: 0;
+                width: 3px;
+                height: ${20 + Math.random() * 25}px;
+                background: linear-gradient(to top, ${color}dd, transparent);
+                border-radius: 2px;
+                filter: blur(0.5px);
+                pointer-events: none;
+                z-index: 94;
+                animation: steamWisp ${0.7 + Math.random() * 0.5}s ease-out forwards;
+            `;
+            filament.style.setProperty('--rise-w', `-${70 + Math.random() * 100}px`);
+            filament.style.setProperty('--curve', `${(Math.random() - 0.5) * 60}px`);
+            emitter.appendChild(filament);
+            setTimeout(() => filament.remove(), 1200);
+        }
+        
+        // 6. POUSSIÈRE LUMINEUSE (très petite, très nombreuse)
+        for(let k=0; k<2; k++) {
+            const dust = document.createElement('div');
+            dust.style.cssText = `
+                position: absolute;
+                left: ${50 + (Math.random() - 0.5) * 50}%;
+                bottom: ${Math.random() * 5}px;
+                width: 2px;
+                height: 2px;
+                background: ${Math.random() > 0.5 ? '#fff' : color};
+                border-radius: 50%;
+                opacity: 0.8;
+                pointer-events: none;
+                z-index: 99;
+                animation: steamDust ${0.8 + Math.random() * 0.6}s ease-out forwards;
+            `;
+            dust.style.setProperty('--rise-d', `-${30 + Math.random() * 50}px`);
+            dust.style.setProperty('--drift-d', `${(Math.random() - 0.5) * 50}px`);
+            emitter.appendChild(dust);
+            setTimeout(() => dust.remove(), 1400);
+        }
+        
+    }, 25); // Toutes les 25ms = 40 cycles/sec x 4-6 particules = 160-240 particules/sec !
+    
+    setTimeout(() => {
+        clearInterval(particleInterval);
+        if (emitter.parentNode) {
+            emitter.style.opacity = '0';
+            setTimeout(() => emitter.remove(), 300);
+        }
+    }, duration + 300);
+}function flashHitLine(x, color) {
+    const hitLine = document.getElementById('hit-line');
+    if (!hitLine) {
+        console.log("Hit line non trouvée");
+        return;
+    }
+    
+    // 1. Créer une tache lumineuse intense sur la ligne
+    const flash = document.createElement('div');
+    flash.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: 50%;
+        width: 80px;
+        height: 6px;
+        background: radial-gradient(ellipse at center, white 0%, ${color} 40%, transparent 80%);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        border-radius: 50%;
+        box-shadow: 0 0 30px ${color}, 0 0 60px ${color};
+        animation: lineFlash 0.5s ease-out forwards;
+        z-index: 10000;
+    `;
+    
+    hitLine.appendChild(flash);
+    
+    // 2. Illuminer toute la ligne avec transition
+    const originalBoxShadow = hitLine.style.boxShadow;
+    const originalBg = hitLine.style.background;
+    
+    hitLine.style.transition = 'all 0.1s';
+    hitLine.style.boxShadow = `0 0 40px ${color}, 0 0 80px ${color}, 0 0 120px white`;
+    hitLine.style.height = '6px';
+    hitLine.style.background = `linear-gradient(90deg, transparent 0%, ${color} 45%, white 50%, ${color} 55%, transparent 100%)`;
+    
+    // Restaurer après 200ms
+    setTimeout(() => {
+        hitLine.style.boxShadow = originalBoxShadow;
+        hitLine.style.background = originalBg;
+        hitLine.style.height = '4px';
+    }, 200);
+    
+    // Nettoyer l'élément flash
+    setTimeout(() => {
+        if(flash.parentNode) flash.remove();
+    }, 500);
+}
 function handleKeyPress(note, isManual = false) {
     // 1. Animation visuelle de la touche (toujours exécutée, clavier ou micro)
     const k = document.querySelector(`.key[data-note="${note}"]`);
+    
     if(k) { 
         const color = getNoteColor(note);
         k.style.backgroundColor = color;
         k.style.boxShadow = `0 0 20px ${color}, 0 0 40px white`;
         k.style.transform = 'translateY(2px)';
         k.classList.add('active');
-        setTimeout(() => {
-            k.style.backgroundColor = "";
-            k.style.boxShadow = "";
-            k.style.transform = "";
-            k.classList.remove('active');
-        }, 150);
+        
+        // On enlève le setTimeout fixe d'ici pour le gérer plus bas selon la durée
     }
 
     // 2. DÉTECTION de la note tombante
-    // Détection sur le BAS de la note (bottomOfNote) comme demandé précédemment
     const hitLine = document.getElementById('hit-line');
     const fZone = document.getElementById('fall-zone');
     const hitLineY = hitLine ? hitLine.offsetTop : (window.innerHeight - 160);
-    const detectionZone = 150; // Pixels de tolérance avant/après la ligne
+    const detectionZone = 150;
 
     const t = notesOnScreen.find(n => {
-        const bottomOfNote = n.y + n.h; // Position du bas de la note
+        const bottomOfNote = n.y + n.h;
         return n.note === note && 
-               !n.ok && // Pas encore validée
-               bottomOfNote >= (hitLineY - detectionZone) && // Détecte avant la ligne
-               bottomOfNote <= (hitLineY + 100); // Et un peu après
+               !n.ok && 
+               bottomOfNote >= (hitLineY - detectionZone) && 
+               bottomOfNote <= (hitLineY + 100);
     });
 
     if(t) {
-        // Note trouvée et validée !
-        const noteDuration = (t.d || 400) / 1000;
-        playNoteSound(getFreq(note), noteDuration);
+        const noteDuration = (t.d || 400);
+        playNoteSound(getFreq(note), noteDuration / 1000);
         
         t.ok = true; 
         notesValidated++;
         
-        // Effet visuel sur la note tombante (elle "explose")
+        // Animation de la touche qui dure TOUTE la durée de la note !
+        if(k) {
+            const color = getNoteColor(note);
+            
+            // Clear tout timeout précédent sur cette touche (si spam)
+            if(k.dataset.timeoutId) {
+                clearTimeout(parseInt(k.dataset.timeoutId));
+            }
+            
+            // Appliquer la couleur pour toute la durée
+            k.style.backgroundColor = color;
+            k.style.boxShadow = `0 0 20px ${color}, 0 0 40px white`;
+            k.style.transform = 'translateY(2px)';
+            k.classList.add('active');
+            
+            // Timeout basé sur la durée réelle de la note
+            const timeoutId = setTimeout(() => {
+                k.style.backgroundColor = "";
+                k.style.boxShadow = "";
+                k.style.transform = "";
+                k.classList.remove('active');
+                k.dataset.timeoutId = "";
+            }, noteDuration);
+            
+            k.dataset.timeoutId = timeoutId;
+        }
+        
         const noteElement = document.getElementById(t.id);
         if(noteElement) {
             const color = getNoteColor(note);
             noteElement.style.boxShadow = `0 0 50px ${color}, 0 0 20px #fff`;
             noteElement.style.background = "white";
             noteElement.style.transform = 'scale(1.2)';
-            noteElement.style.opacity = "1";
             
-            // Effet d'évaporation à la position de la touche
             if(k && fZone) {
                 const keyRect = k.getBoundingClientRect();
                 const fZoneRect = fZone.getBoundingClientRect();
                 const centerX = (keyRect.left - fZoneRect.left) + (keyRect.width / 2);
-                createNoteEvaporation(centerX, hitLineY, color, t.h || 40);
+                
+                flashHitLine(centerX, color);
+                startNoteSteam(centerX, color, noteDuration, t.h || 40);
             }
         }
         
-        // Avancer le curseur sur la partition OSMD si elle est ouverte
         if(window.osmdCursor && typeof window.osmdCursor.next === 'function') {
             window.osmdCursor.next();
         }
         
-        // Sauvegarder la progression si c'est un niveau
-        if(currentLevelTitle) {
-            saveProgress(currentLevelTitle);
-        }
-        
-        // Débloquer le jeu si on était en pause (mode step)
-        if(isPaused) {
-            isPaused = false;
-        }
+        if(currentLevelTitle) saveProgress(currentLevelTitle);
+        if(isPaused) isPaused = false;
         
     } else if(isManual) {
-        // Si appui manuel sans note correspondante dans la zone, joue juste le son libre
+        // Mode manuel (joue librement) - garder un temps court par défaut
+        if(k) {
+            const color = getNoteColor(note);
+            setTimeout(() => {
+                k.style.backgroundColor = "";
+                k.style.boxShadow = "";
+                k.style.transform = "";
+                k.classList.remove('active');
+            }, 300); // 300ms par défaut pour le jeu libre
+        }
+        
         playNoteSound(getFreq(note), 0.3);
     }
 }
@@ -991,122 +1289,49 @@ function playNoteSound(f, duration = 0.5) {
     o.stop(now + duration); 
 }
 
-function drop(nData) {
-    const fZone = document.getElementById('fall-zone');
-    const targetKey = document.querySelector(`.key[data-note="${nData.note}"]`);
-    const hitLine = document.getElementById('hit-line');
-    if(!targetKey || !fZone || !hitLine) return;
-
-    const noteDuration = nData.d || 400;
-    const calculatedHeight = Math.max(80, (noteDuration / 8) * (currentSpeed / 3));
-    const noteId = 'note-' + Math.random().toString(36).substr(2, 9);
-
-    const keyRect = targetKey.getBoundingClientRect();
-    const fZoneRect = fZone.getBoundingClientRect();
-    const leftPos = keyRect.left - fZoneRect.left + 3;
-    const width = keyRect.width - 6;
-
-    const o = { 
-        ...nData, 
-        y: -calculatedHeight - 30,
-        ok: false, 
-        played: false,
-        id: noteId, 
-        h: calculatedHeight
-    };
-    notesOnScreen.push(o);
-
-    const el = document.createElement('div');
-    el.id = noteId;
-    el.className = 'falling-note';
-    
-    const noteBase = nData.note.replace(/[0-9#]/g, '');
-    let baseColor = noteColors[noteBase] || '#1aff00';
-    
-    if (colorMode === 'intermediaire') {
-        baseColor = '#00d9ff';
-    }
-
-    el.style.cssText = `
-        position: absolute;
-        left: ${leftPos}px;
-        width: ${width}px;
-        height: ${calculatedHeight}px;
-        top: ${o.y}px;
-        border-radius: 15px 15px 8px 8px;
-        border: 2px solid rgba(255, 255, 255, 0.6);
-        background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, ${baseColor}66 100%);
-        z-index: 50;
-    `;
-
-    const hand = nData.m || (parseInt(nData.note.slice(-1)) <= 3 ? 'G' : 'D');
-    const finger = nData.f || 1;
-    const displayNote = noteNamesFR[noteBase] || noteBase;
-    
-    el.innerHTML = `
-        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 4px 12px; border-radius: 20px; background: ${baseColor}; color: #000; font-weight: bold; border: 2px solid white;">${hand}${finger}</div>
-        <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); padding: 3px 10px; border-radius: 12px; background: white; color: #000; font-weight: bold; border: 1px solid ${baseColor};">${displayNote}</div>
-    `;
-
-    fZone.appendChild(el);
-    const hitLineY = hitLine.offsetTop;
-
-    const animate = () => {
-        const currentEl = document.getElementById(noteId);
-        if (!currentEl) return;
-
-        if(!isPaused || o.ok) {
-            o.y += currentSpeed;
-            currentEl.style.top = o.y + "px";
-        }
-        
-        const bottomOfNote = o.y + o.h;
-        
-        // CORRECTION : Joue quand le BAS de la note touche la ligne (pour toutes)
-        if(currentMode === 'auto' && !o.played && bottomOfNote >= hitLineY) {
-            // Joue le son immédiatement
-            playNoteSound(getFreq(o.note), (o.d || 400) / 1000);
-            
-            // Animation de la touche
-            const k = document.querySelector(`.key[data-note="${o.note}"]`);
-            if(k) { 
-                const color = getNoteColor(o.note);
-                k.style.backgroundColor = color;
-                k.style.boxShadow = `0 0 20px ${color}`;
-                setTimeout(() => {
-                    k.style.backgroundColor = "";
-                    k.style.boxShadow = "";
-                }, 150);
-            }
-            
-            o.played = true;
-            o.ok = true; // Continue de tomber après avoir joué
-        }
-        
-        // Mode Step : même logique, mais on bloque après
-        if(currentMode === 'step' && bottomOfNote >= hitLineY && !o.ok) { 
-            isPaused = true; 
-            o.y = hitLineY - o.h; // Bloque le bas sur la ligne
-            currentEl.style.top = o.y + "px";
-            
-            if(!o.played) {
-                playNoteSound(getFreq(o.note), (o.d || 400) / 1000);
-                o.played = true;
-            }
-        }
-
-        if(o.y > fZone.offsetHeight + 200) {
-            if(currentEl.parentNode) currentEl.remove();
-            const idx = notesOnScreen.findIndex(n => n.id === noteId);
-            if (idx > -1) notesOnScreen.splice(idx, 1);
-        } else {
-            requestAnimationFrame(animate);
-        }
-    }; 
-    
-    requestAnimationFrame(animate);
+function drop(nData){
+const fZone=document.getElementById('fall-zone'),targetKey=document.querySelector(`.key[data-note="${nData.note}"]`),hitLine=document.getElementById('hit-line');
+if(!targetKey||!fZone||!hitLine)return;
+const noteDuration=nData.d||400,calculatedHeight=Math.max(80,(noteDuration/8)*(currentSpeed/3)),noteId='note-'+Math.random().toString(36).substr(2,9),keyRect=targetKey.getBoundingClientRect(),fZoneRect=fZone.getBoundingClientRect(),leftPos=keyRect.left-fZoneRect.left+3,width=keyRect.width-6;
+const o={...nData,y:-calculatedHeight-30,ok:false,played:false,id:noteId,h:calculatedHeight};
+notesOnScreen.push(o);
+const el=document.createElement('div');
+el.id=noteId;
+el.className='falling-note';
+const noteBase=nData.note.replace(/[0-9#]/g,'');
+let baseColor=noteColors[noteBase]||'#1aff00';
+if(colorMode==='intermediaire')baseColor='#00d9ff';
+el.style.cssText=`position:absolute;left:${leftPos}px;width:${width}px;height:${calculatedHeight}px;top:${o.y}px;border-radius:15px 15px 8px 8px;border:2px solid rgba(255,255,255,0.6);background:linear-gradient(180deg,rgba(255,255,255,0.4) 0%,${baseColor}66 100%);z-index:50;`;
+const hand=nData.m||(parseInt(nData.note.slice(-1))<=3?'G':'D'),finger=nData.f||1,displayNote=noteNamesFR[noteBase]||noteBase;
+el.innerHTML=`<div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:4px 12px;border-radius:20px;background:${baseColor};color:#000;font-weight:bold;border:2px solid white;">${hand}${finger}</div><div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);padding:3px 10px;border-radius:12px;background:white;color:#000;font-weight:bold;border:1px solid ${baseColor};">${displayNote}</div>`;
+fZone.appendChild(el);
+const hitLineY=hitLine.offsetTop;
+const animate=()=>{
+const currentEl=document.getElementById(noteId);
+if(!currentEl)return;
+if(!isPaused||o.ok){o.y+=currentSpeed;currentEl.style.top=o.y+"px";}
+const bottomOfNote=o.y+o.h;
+if(currentMode==='auto'&&!o.played&&bottomOfNote>=hitLineY){
+playNoteSound(getFreq(o.note),(o.d||400)/1000);
+const k=document.querySelector(`.key[data-note="${o.note}"]`);
+if(k){
+const color=getNoteColor(o.note);
+if(k.dataset.timeoutId)clearTimeout(parseInt(k.dataset.timeoutId));
+k.style.backgroundColor=color;
+k.style.boxShadow=`0 0 20px ${color},0 0 40px white`;
+k.classList.add('active');
+k.dataset.timeoutId=setTimeout(()=>{k.style.backgroundColor="";k.style.boxShadow="";k.classList.remove('active');},o.d||400);
+const kRect=k.getBoundingClientRect(),fRect=fZone.getBoundingClientRect(),centerX=(kRect.left-fRect.left)+(kRect.width/2);
+flashHitLine(centerX,color);
+startNoteSteam(centerX,color,o.d||400,o.h||40);
 }
-
+o.played=true;o.ok=true;
+}
+if(currentMode==='step'&&bottomOfNote>=hitLineY&&!o.ok){isPaused=true;o.y=hitLineY-o.h;currentEl.style.top=o.y+"px";if(!o.played){o.played=true;playNoteSound(getFreq(o.note),(o.d||400)/1000);}}
+if(o.y>fZone.offsetHeight+200){currentEl.remove();const idx=notesOnScreen.findIndex(n=>n.id===noteId);if(idx>-1)notesOnScreen.splice(idx,1);}else{requestAnimationFrame(animate);}
+};
+requestAnimationFrame(animate);
+}
 function startGame(data, mode) {
     clearTimeout(gameLoopTimeout);
     const fZone = document.getElementById('fall-zone');

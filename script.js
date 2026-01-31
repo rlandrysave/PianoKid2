@@ -69,7 +69,7 @@ exercices: [
         { titre: "18. Accords Brisés", diff: 'medium', notes: [{note:'C4',f:1,d:200},{note:'E4',f:3,d:200},{note:'G4',f:5,d:200},{note:'E4',f:3,d:200}] },
         { titre: "19. Saut de Quinte (Précision)", diff: 'hard', notes: [{note:'C4',f:1,d:300},{note:'G4',f:5,d:300},{note:'C4',f:1,d:300}] },
         { titre: "20. Accélération progressive", diff: 'hard', notes: [{note:'C4',d:400},{note:'D4',d:300},{note:'E4',d:200},{note:'F4',d:100}] }
-    ],,
+    ],
     apprentissage: [
         { titre: "Loreen - Tattoo", diff: 'hard', notes: [{note:'A3', f:1, d:600}, {note:'C4', f:2, d:600}, {note:'E4', f:4, d:1200}, {note:'A3', f:1, d:600}, {note:'C4', f:2, d:600}, {note:'E4', f:4, d:1200}] },
         { titre: "Metallica - Nothing Else Matters", diff: 'medium', notes: [{note:'E2', f:1, d:400}, {note:'G3', f:2, d:400}, {note:'B3', f:3, d:400}, {note:'E4', f:5, d:1200}] },
@@ -196,7 +196,74 @@ exercices: [
     musique: [
         { titre: "Hallelujah", diff: 'easy', notes: [{note:'E4', f:1, d:600}, {note:'G4', f:3, d:300}, {note:'G4', f:3, d:600}] },
         { titre: "Eiffel 65 - Blue", diff: 'medium', notes: [{note:'G4', d:200}, {note:'A4', d:200}, {note:'B4', d:200}] },
-{titre: "Pirates des Caraïbes",diff: 'hard',emoji: "🏴‍☠️",notes:[// --- LE THEME CELEBRE (Le bon rythme) ---
+{ 
+        titre: "Ode à la Joie", 
+        diff: 'easy', 
+        emoji: "🇪🇺",
+        notes: [
+            {note: "E4", t: 0, d: 400, f: 3}, {note: "E4", t: 400, d: 400, f: 3}, {note: "F4", t: 800, d: 400, f: 4}, {note: "G4", t: 1200, d: 400, f: 5},
+            {note: "G4", t: 1600, d: 400, f: 5}, {note: "F4", t: 2000, d: 400, f: 4}, {note: "E4", t: 2400, d: 400, f: 3}, {note: "D4", t: 2800, d: 400, f: 2},
+            {note: "C4", t: 3200, d: 400, f: 1}, {note: "C4", t: 3600, d: 400, f: 1}, {note: "D4", t: 4000, d: 400, f: 2}, {note: "E4", t: 4400, d: 400, f: 3},
+            {note: "E4", t: 4800, d: 600, f: 3}, {note: "D4", t: 5400, d: 200, f: 2}, {note: "D4", t: 5600, d: 800, f: 2}
+        ] 
+    },
+    { 
+        titre: "Interstellar (Main Theme)", 
+        diff: 'hard', 
+        emoji: "🚀",
+        notes: [
+            // Motif répétitif hypnotique
+            {note: "A4", t: 0, d: 350, f: 5}, {note: "E4", t: 400, d: 350, f: 2},
+            {note: "A4", t: 800, d: 350, f: 5}, {note: "E4", t: 1200, d: 350, f: 2},
+            {note: "B4", t: 1600, d: 350, f: 5}, {note: "E4", t: 2000, d: 350, f: 2},
+            {note: "C5", t: 2400, d: 350, f: 5}, {note: "E4", t: 2800, d: 350, f: 2},
+            // Ajout de la basse main gauche
+            {note: "A2", m: 'G', t: 3200, d: 1600, f: 5}, 
+            {note: "A4", t: 3200, d: 350}, {note: "E4", t: 3600, d: 350},
+            {note: "A4", t: 4000, d: 350}, {note: "E4", t: 4400, d: 350}
+        ] 
+    },
+    { 
+        titre: "Imagine (Intro)", 
+        diff: 'medium', 
+        emoji: "🕊️",
+        notes: [
+            // Accord de DO basculé
+            {note: "C4", t: 0, d: 400, f: 1}, {note: "E4", t: 0, d: 400, f: 3}, {note: "G4", t: 0, d: 400, f: 5},
+            {note: "E4", t: 400, d: 200}, {note: "G4", t: 600, d: 200},
+            // Accord de FA
+            {note: "C4", t: 800, d: 400}, {note: "F4", t: 800, d: 400, f: 4}, {note: "A4", t: 800, d: 400, f: 5},
+            {note: "F4", t: 1200, d: 200}, {note: "A4", t: 1400, d: 200}
+        ] 
+    },
+    { 
+        titre: "In the End (Linkin Park)", 
+        diff: 'medium', 
+        emoji: "🎹",
+        notes: [
+            {note: "D#4", t: 0, d: 400, f: 3}, 
+            {note: "A#3", t: 400, d: 800, f: 1}, 
+            {note: "A#3", t: 1200, d: 400},
+            {note: "B3", t: 1600, d: 400, f: 2}, 
+            {note: "A#3", t: 2000, d: 400}, 
+            {note: "G#3", t: 2400, d: 400, f: 1}, 
+            {note: "F#3", t: 2800, d: 400, f: 1}
+        ] 
+    },
+    { 
+        titre: "Bella Ciao", 
+        diff: 'medium', 
+        emoji: "🎭",
+        notes: [
+            {note: "E4", t: 0, d: 200, f: 1}, {note: "A4", t: 200, d: 200, f: 2}, {note: "B4", t: 400, d: 200, f: 3}, {note: "C5", t: 600, d: 200, f: 4},
+            {note: "A4", t: 800, d: 600, f: 2},
+            {note: "E4", t: 1400, d: 200}, {note: "A4", t: 1600, d: 200}, {note: "B4", t: 1800, d: 200}, {note: "C5", t: 2000, d: 200},
+            {note: "A4", t: 2200, d: 600},
+            {note: "A4", t: 2800, d: 200}, {note: "C5", t: 3000, d: 200}, {note: "B4", t: 3200, d: 200}, {note: "A4", t: 3400, d: 200},
+            {note: "E5", t: 3600, d: 800, f: 5}
+        ] 
+    },
+        {titre: "Pirates des Caraïbes",diff: 'hard',emoji: "🏴‍☠️",notes:[// --- LE THEME CELEBRE (Le bon rythme) ---
         {note: "A3", t: 0, d: 150, f: 1}, 
         {note: "C4", t: 150, d: 150, f: 2},
         {note: "D4", t: 400, d: 400, f: 3}, // La note longue

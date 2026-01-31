@@ -6,7 +6,7 @@ const noteColors = { 'C': '#FF0000', 'D': '#FF7F00', 'E': '#FFFF00', 'F': '#00FF
 
 let gameLoopTimeout;
 let currentSpeed = 4;
-window.isPro = window.isPro || false;
+window.isPro = true
 
 let selectedRole = 'enfant';
 let selectedEmoji = '🎹';
@@ -71,7 +71,127 @@ const DATA = {
         { titre: "a-ha - Take On Me", diff: 'hard', notes: [{note:'B3', d:200}, {note:'B3', d:200}, {note:'E4', d:200}] },
         { titre: "O-Zone - Dragostea Din Tei", diff: 'medium', notes: [{note:'B4', d:300}, {note:'A4', d:300}, {note:'G4', d:300}] },
         { titre: "Gigi D'Agostino", diff: 'hard', notes: [{note:'A4', d:200}, {note:'G4', d:200}, {note:'A4', d:200}] },
-        { titre: "Rick Astley", diff: 'medium', notes: [{note:'C4', d:200}, {note:'D4', d:200}, {note:'F4', d:200}] }
+        { titre: "Rick Astley", diff: 'medium', notes: [{note:'C4', d:200}, {note:'D4', d:200}, {note:'F4', d:200}] },
+   { 
+    titre: "Pirates des Caraïbes", 
+    diff: 'hard', 
+    emoji: "🏴‍☠️",
+    notes: [
+        // --- LE THEME CELEBRE (Le bon rythme) ---
+        {note: "A3", t: 0, d: 150, f: 1}, 
+        {note: "C4", t: 150, d: 150, f: 2},
+        {note: "D4", t: 300, d: 400, f: 3}, // La note longue
+        {note: "D4", t: 800, d: 400, f: 3}, 
+        
+        {note: "D4", t: 1300, d: 150, f: 3}, 
+        {note: "E4", t: 1450, d: 150, f: 4},
+        {note: "F4", t: 1600, d: 400, f: 5}, // La note longue
+        {note: "F4", t: 2100, d: 400, f: 5},
+
+        {note: "F4", t: 2600, d: 150, f: 5}, 
+        {note: "G4", t: 2750, d: 150, f: 1},
+        {note: "E4", t: 2900, d: 400, f: 3}, 
+        {note: "E4", t: 3400, d: 400, f: 3},
+
+        {note: "D4", t: 3900, d: 150, f: 2}, 
+        {note: "C4", t: 4050, d: 150, f: 1},
+        {note: "D4", t: 4200, d: 800, f: 2}, // Fin de la première boucle
+
+        // --- DEUXIEME PARTIE (Plus intense) ---
+        {note: "A3", t: 5200, d: 150}, 
+        {note: "C4", t: 5350, d: 150},
+        {note: "D4", t: 5500, d: 400}, 
+        {note: "D4", t: 6000, d: 400},
+
+        {note: "D4", t: 6500, d: 150}, 
+        {note: "E4", t: 6650, d: 150},
+        {note: "F4", t: 6800, d: 400}, 
+        {note: "F4", t: 7300, d: 400},
+
+        {note: "F4", t: 7800, d: 150}, 
+        {note: "G4", t: 7950, d: 150},
+        {note: "A4", t: 8100, d: 400}, 
+        {note: "A4", t: 8600, d: 400},
+
+        {note: "Bb4", t: 9100, d: 150}, 
+        {note: "A4", t: 9250, d: 150},
+        {note: "G4", t: 9400, d: 300},
+        {note: "A4", t: 9700, d: 800}
+    ] 
+},
+{ 
+    titre: "Axel F", 
+    diff: 'hard', 
+    emoji: "🏎️",
+    notes: [
+        {note: "D4", t: 0, d: 300}, 
+        {note: "F4", t: 400, d: 200}, 
+        {note: "D4", t: 750, d: 200}, 
+        {note: "D4", t: 950, d: 100}, 
+        {note: "G4", t: 1100, d: 200}, 
+        {note: "D4", t: 1450, d: 200}, 
+        {note: "C4", t: 1800, d: 200},
+
+        {note: "D4", t: 2200, d: 300}, 
+        {note: "A4", t: 2600, d: 200}, 
+        {note: "D4", t: 2950, d: 200}, 
+        {note: "D4", t: 3150, d: 100}, 
+        {note: "Bb4", t: 3300, d: 200}, 
+        {note: "A4", t: 3650, d: 200}, 
+        {note: "F4", t: 4000, d: 200},
+
+        {note: "D4", t: 4400, d: 200}, 
+        {note: "A4", t: 4750, d: 200}, 
+        {note: "D5", t: 5100, d: 300},
+        {note: "D4", t: 5500, d: 200}, 
+        {note: "C4", t: 5850, d: 200}, 
+        {note: "C4", t: 6050, d: 100}, 
+        {note: "E4", t: 6200, d: 200}, 
+        {note: "D4", t: 6550, d: 800}
+    ] 
+},{ 
+    titre: "Harry Potter", 
+    diff: 'hard', 
+    emoji: "⚡",
+    notes: [
+        // --- MÉLODIE MYSTÉRIQUE (Intro) ---
+        {note: "B3", t: 0, d: 200, f: 1}, 
+        {note: "E4", t: 400, d: 300, f: 2}, 
+        {note: "G4", t: 700, d: 150, f: 4}, 
+        {note: "F#4", t: 850, d: 150, f: 3},
+        {note: "E4", t: 1000, d: 450, f: 2}, 
+        {note: "B4", t: 1500, d: 250, f: 5},
+        {note: "A4", t: 1800, d: 800, f: 4}, // Note de lave longue
+
+        {note: "F#4", t: 2800, d: 450, f: 3},
+        {note: "E4", t: 3300, d: 300, f: 2}, 
+        {note: "G4", t: 3600, d: 150, f: 4}, 
+        {note: "F#4", t: 3750, d: 150, f: 3},
+        {note: "D#4", t: 3900, d: 450, f: 2}, 
+        {note: "F4", t: 4400, d: 250, f: 3},
+        {note: "B3", t: 4700, d: 800, f: 1},
+
+        // --- DEUXIÈME PARTIE ---
+        {note: "B3", t: 5700, d: 200}, 
+        {note: "E4", t: 6100, d: 300}, 
+        {note: "G4", t: 6400, d: 150}, 
+        {note: "F#4", t: 6550, d: 150},
+        {note: "E4", t: 6700, d: 450}, 
+        {note: "B4", t: 7200, d: 250},
+        {note: "D5", t: 7500, d: 400}, 
+        {note: "C#5", t: 8000, d: 400},
+        {note: "C5", t: 8500, d: 400},
+
+        // --- FINAL ÉPIQUE ---
+        {note: "G#4", t: 9000, d: 200}, 
+        {note: "C5", t: 9300, d: 300}, 
+        {note: "B4", t: 9600, d: 150}, 
+        {note: "Bb4", t: 9750, d: 150},
+        {note: "Bb3", t: 10000, d: 400}, 
+        {note: "G4", t: 10500, d: 200},
+        {note: "E4", t: 10800, d: 1200} // Énorme jet de lave final !
+    ] 
+}
     ],
     partitions: [
         { titre: "📤 Importer MusicXML/MIDI", diff: 'custom', type: 'import', action: 'openPartitionModal' },
@@ -300,37 +420,38 @@ function transposeImport(semitones) {
 
 async function loadPartitionFile() {
     if (!selectedPartitionFile) {
-        alert('Veuillez d\'abord sélectionner un fichier MIDI');
+        alert('Veuillez d\'abord sélectionner un fichier');
         return;
     }
 
     try {
-        console.log("Chargement:", selectedPartitionFile.name);
-        await partitionTranslator.loadFromFile(selectedPartitionFile);
+        const scoreViewer = document.getElementById('score-viewer-container');
         
-        if (currentImportTranspose !== 0) {
-            partitionTranslator.transpose(currentImportTranspose);
+        // 1. Afficher et charger OSMD
+        if (selectedPartitionFile.name.match(/\.(xml|mxl|musicxml)$/i)) {
+            scoreViewer.style.display = 'block';
+            const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmd-container", {
+                drawTitle: false,
+                autoResize: true
+            });
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                await osmd.load(e.target.result);
+                osmd.render();
+            };
+            reader.readAsText(selectedPartitionFile);
+        } else {
+            scoreViewer.style.display = 'none';
         }
-        
+
+        // 2. Traduction et lancement (ton code original)
+        await partitionTranslator.loadFromFile(selectedPartitionFile);
         const gameNotes = partitionTranslator.convertToGameFormat(currentSpeed / 4);
-        console.log("Notes converties:", gameNotes.length);
         
         closePartitionModal();
-        
-        const partitionData = {
-            titre: `🎼 ${selectedPartitionFile.name.replace(/\.[^/.]+$/, '')}`,
-            diff: 'custom',
-            notes: gameNotes
-        };
-        
-        currentLevelTitle = partitionData.titre;
-        const scoreViewer = document.getElementById('score-viewer-container');
-        if (scoreViewer) scoreViewer.style.display = 'none';
-        
-        startGame(partitionData, 'auto');
+        startGame({ titre: selectedPartitionFile.name, notes: gameNotes }, 'auto');
         
     } catch (error) {
-        alert('Erreur lors du chargement: ' + error.message);
         console.error(error);
     }
 }
@@ -502,7 +623,7 @@ function unlockPro() {
 }
 
 function getNoteColor(note) {
-    if (colorMode === 'expert') return '#ff4500';
+    if (colorMode === 'expert') return '#ff0000';
     if (colorMode === 'intermediaire') return '#00d9ff';
     const base = note.replace(/[0-9#]/g, '');
     return noteColors[base] || '#00f2ff';
@@ -512,137 +633,46 @@ function createNoteEvaporation(x, y, color, noteHeight) {
     const fZone = document.getElementById('fall-zone');
     if (!fZone || !x || !y) return;
     
-    const isLong = noteHeight > 120;
-    const points = isLong ? Math.min(6, Math.floor(noteHeight / 20)) : 1;
+    const isLong = noteHeight > 100;
+    // La taille de l'effet dépend de la hauteur de la note
+    const dynamicSize = isLong ? Math.min(100, noteHeight / 1.5) : 40;
+
+    // 1. BULLE D'ÉNERGIE PRINCIPALE
+    const glow = document.createElement('div');
+    glow.className = 'note-glow-up';
+    glow.style.left = x + 'px';
+    glow.style.top = y + 'px';
+    glow.style.width = '20px'; // Départ petit
+    glow.style.backgroundColor = color;
+    glow.style.boxShadow = `0 0 ${dynamicSize}px ${color}`;
     
-    // 1. PARTICULES PROGRESSIVES (votre code qui marche)
-    for (let pos = 0; pos < points; pos++) {
-        const progress = pos / (points - 1 || 1);
-        const yPos = y - (noteHeight * progress * 0.9);
-        const delay = pos * 60; // Plus rapide (60ms au lieu de 80ms)
-        
-        setTimeout(() => {
-            if (!document.getElementById('fall-zone')) return;
-            
-            // Plus de particules pour les notes longues
-            const particleCount = isLong ? 8 : 5;
-            
-            for(let i = 0; i < particleCount; i++) {
-                const p = document.createElement('div');
-                const size = 2 + Math.random() * 3;
-                const spreadX = (Math.random() - 0.5) * (isLong ? 40 : 30);
-                
-                p.style.cssText = `
-                    position: absolute;
-                    left: ${x + spreadX}px;
-                    top: ${yPos}px;
-                    width: ${size}px;
-                    height: ${size}px;
-                    background: ${color};
-                    border-radius: 50%;
-                    box-shadow: 0 0 ${size * 2}px ${color}, 0 0 ${size * 4}px ${color}66;
-                    pointer-events: none;
-                    z-index: 60;
-                    opacity: 0;
-                    animation: riseFade ${0.5 + Math.random() * 0.3}s ease-out forwards;
-                    --rise: -${30 + Math.random() * 40}px;
-                `;
-                
-                fZone.appendChild(p);
-                setTimeout(() => { if(p.parentNode) p.remove(); }, 800);
-            }
-            
-            // 2. TRAÎNÉES VERTICALES (uniquement pour notes longues, 1 sur 2)
-            if(isLong && pos % 2 === 0) {
-                const trail = document.createElement('div');
-                trail.style.cssText = `
-                    position: absolute;
-                    left: ${x + (Math.random() - 0.5) * 20}px;
-                    top: ${yPos}px;
-                    width: 2px;
-                    height: ${30 + Math.random() * 20}px;
-                    background: linear-gradient(to top, ${color}88, transparent);
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 59;
-                    opacity: 0;
-                    animation: trailUp 0.7s ease-out forwards;
-                `;
-                fZone.appendChild(trail);
-                setTimeout(() => { if(trail.parentNode) trail.remove(); }, 700);
-            }
-        }, delay);
-    }
-    
-    // 3. VAGUE LUMINEUSE qui remonte vite (pour les longues)
-    if(isLong) {
-        const wave = document.createElement('div');
-        wave.style.cssText = `
-            position: absolute;
-            left: ${x}px;
-            top: ${y}px;
-            width: 35px;
-            height: ${noteHeight}px;
-            background: linear-gradient(to top, ${color}00, ${color}55, ${color}00);
-            transform: translate(-50%, 0);
-            pointer-events: none;
-            z-index: 58;
-            filter: blur(5px);
-            opacity: 0;
-            animation: waveClimb 0.8s ease-out forwards;
-        `;
-        fZone.appendChild(wave);
-        setTimeout(() => { if(wave.parentNode) wave.remove(); }, 800);
-    }
-    
-    // 4. EXPLOSION AU POINT D'IMPACT (toujours)
-    for(let i = 0; i < 12; i++) {
+    // On passe la hauteur à l'animation CSS via une variable
+    glow.style.setProperty('--travel-height', `${noteHeight}px`);
+    glow.style.setProperty('--final-size', `${dynamicSize}px`);
+
+    fZone.appendChild(glow);
+    setTimeout(() => glow.remove(), 1000);
+
+    // 2. ÉTINCELLES ASCENDANTES
+    const particleCount = isLong ? 15 : 8;
+    for (let i = 0; i < particleCount; i++) {
         const p = document.createElement('div');
-        const angle = Math.random() * Math.PI;
-        const power = 20 + Math.random() * 40;
+        p.className = 'rising-spark';
+        p.style.left = (x + (Math.random() - 0.5) * 40) + 'px';
+        p.style.top = y + 'px';
+        p.style.backgroundColor = 'white';
+        p.style.boxShadow = `0 0 10px ${color}`;
         
-        p.style.cssText = `
-            position: absolute;
-            left: ${x}px;
-            top: ${y}px;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 4px ${color};
-            pointer-events: none;
-            z-index: 61;
-            animation: impactPop 0.4s ease-out forwards;
-            --tx: ${Math.cos(angle) * power}px;
-            --ty: ${-Math.sin(angle) * power}px;
-        `;
+        // Vitesse et hauteur aléatoire pour le côté organique
+        const duration = 0.5 + Math.random() * 0.5;
+        const drift = (Math.random() - 0.5) * 50;
+        
+        p.style.setProperty('--up-dist', `${noteHeight + 50}px`);
+        p.style.setProperty('--drift-x', `${drift}px`);
+        p.style.animationDuration = duration + 's';
+
         fZone.appendChild(p);
-        setTimeout(() => { if(p.parentNode) p.remove(); }, 400);
-    }
-    
-    // CSS (inchangé + ajouts)
-    if (!document.getElementById('simple-evap')) {
-        const s = document.createElement('style');
-        s.id = 'simple-evap';
-        s.textContent = `
-            @keyframes riseFade {
-                0% { transform: translate(-50%, 0) scale(1); opacity: 0.9; }
-                100% { transform: translate(-50%, var(--rise)) scale(0); opacity: 0; }
-            }
-            @keyframes trailUp {
-                0% { transform: translate(-50%, 0) scaleY(1); opacity: 0.6; }
-                100% { transform: translate(-50%, -40px) scaleY(0); opacity: 0; }
-            }
-            @keyframes waveClimb {
-                0% { transform: translate(-50%, 0) scaleY(0); opacity: 0.8; }
-                100% { transform: translate(-50%, -${noteHeight}px) scaleY(1); opacity: 0; }
-            }
-            @keyframes impactPop {
-                0% { transform: translate(-50%, -50%) translate(0, 0); opacity: 1; }
-                100% { transform: translate(-50%, -50%) translate(var(--tx), var(--ty)); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(s);
+        setTimeout(() => p.remove(), duration * 1000);
     }
 }
 // OPTIMISATION CRUCIALE : Modifiez aussi votre fonction drop() 
@@ -687,73 +717,83 @@ const animate = () => {
     }
 };
 function handleKeyPress(note, isManual = false) {
-    // Animation de la touche du piano
+    // 1. Animation de la touche du piano (en bas)
     const k = document.querySelector(`.key[data-note="${note}"]`);
     if(k) { 
         const color = getNoteColor(note);
         k.style.backgroundColor = color;
-        k.style.boxShadow = `0 0 20px ${color}`;
+        k.style.boxShadow = `0 0 20px ${color}, 0 0 40px white`; // Ajout d'éclat blanc
         k.style.transform = 'translateY(2px)';
+        k.classList.add('active'); // Force la classe active
         
         setTimeout(() => {
             k.style.backgroundColor = "";
             k.style.boxShadow = "";
             k.style.transform = "";
+            k.classList.remove('active');
         }, 150);
     }
 
-    // Trouver la note correspondante à l'écran
+    // 2. Trouver la note correspondante à l'écran qui n'est pas encore validée
     const t = notesOnScreen.find(n => n.note === note && !n.ok);
     
     if(t) {
+        // Jouer le son
         const noteDuration = (t.d || 400) / 1000;
         playNoteSound(getFreq(note), noteDuration);
         
-        // Marquer comme jouée
+        // Marquer comme jouée (validée)
         t.ok = true; 
         notesValidated++;
         
+        // Gestion visuelle de la note qui tombe
         const fZone = document.getElementById('fall-zone');
         const noteElement = document.getElementById(t.id);
         
-// Dans handleKeyPress, remplacez l'appel par :
-if(noteElement && fZone) {
-    const noteLeft = parseInt(noteElement.style.left) || 0;
-    const noteWidth = parseInt(noteElement.style.width) || 40;
-    const centerX = noteLeft + noteWidth / 2;
-    const hitLineY = document.getElementById('hit-line')?.offsetTop || (fZone.offsetHeight - 20);
-    
-    // Récupérer la hauteur de la note depuis l'objet t (o.h)
-    const noteHeight = t.h || 80;
-    
-    // Évaporation adaptée à la longueur
-    createNoteEvaporation(centerX, hitLineY, getNoteColor(note), noteHeight);
-    
-    // Dissolution visuelle de la note elle-même
-    noteElement.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-    noteElement.style.opacity = '0.1';
-    noteElement.style.transform = 'scale(0.95)';
-    noteElement.style.zIndex = '1';
-    
-    // Nettoyer après
-    setTimeout(() => {
-        noteElement.style.willChange = 'auto';
-    }, 1000);
-}
+        if(noteElement && fZone) {
+            const noteLeft = parseInt(noteElement.style.left) || 0;
+            const noteWidth = parseInt(noteElement.style.width) || 40;
+            const centerX = noteLeft + noteWidth / 2;
+            const hitLineY = document.getElementById('hit-line')?.offsetTop || (fZone.offsetHeight - 20);
+            const noteHeight = t.h || 80;
+            const color = getNoteColor(note);
+
+            // A. Créer les particules (l'explosion visuelle)
+            createNoteEvaporation(centerX, hitLineY, color, noteHeight);
+            
+            // B. MODIFICATION IMPORTANTE : 
+            // Au lieu de cacher la note, on la transforme pour montrer qu'elle est "Réussie"
+            
+            // 1. On la rend bien brillante et visible
+            noteElement.style.transition = 'box-shadow 0.1s ease, background 0.1s ease'; // Transition rapide
+            noteElement.style.opacity = '1'; // On assure qu'elle reste visible
+            noteElement.style.zIndex = '100'; // Elle passe devant les autres
+            
+            // 2. Effet "Gold/Lumière" pour valider
+            noteElement.style.boxShadow = `0 0 30px ${color}, 0 0 10px #fff, inset 0 0 10px #fff`;
+            noteElement.style.background = `linear-gradient(180deg, #fff 0%, ${color} 40%, ${color} 100%)`;
+            noteElement.style.borderColor = "#fff";
+
+            // 3. (Optionnel) Petit effet de "pop" (légère augmentation de taille)
+            noteElement.style.transform = 'scale(1.05)'; 
+
+            // Note : On ne supprime pas l'élément ici, la fonction 'animate' s'en chargera 
+            // quand la note sortira de l'écran par le bas.
+        }
         
-        // Libérer la pause en mode step
+        // Libérer la pause en mode step (si activé)
         isPaused = false; 
         
-        // Fin du niveau
+        // Vérifier si le niveau est terminé
         if(notesValidated === totalNotesInLevel) { 
             saveProgress(currentLevelTitle); 
             setTimeout(() => { 
-                alert("Bravo ! Niveau terminé !"); 
+                alert("Bravo ! Niveau terminé ! 🎹✨"); 
                 quitGame(); 
             }, 1000); 
         }
     } else if(isManual) {
-        // Son si joué manuellement sans note à l'écran
+        // Son si joué manuellement sans note à l'écran (jeu libre)
         playNoteSound(getFreq(note), 0.3);
     }
 }
@@ -907,12 +947,12 @@ function playNoteSound(f, duration = 0.5) {
     o.start(now); 
     o.stop(now + duration); 
 }
-
-// === FONCTION CRITIQUE MODIFIÉE : NOTES PASSANT SOUS LA LIGNE ===
+// === FONCTION CRITIQUE : NOTES AVEC VAPEUR CONTINUE ===
 function drop(nData) {
     const fZone = document.getElementById('fall-zone');
     const targetKey = document.querySelector(`.key[data-note="${nData.note}"]`);
-    if(!targetKey || !fZone) return;
+    const hitLine = document.getElementById('hit-line');
+    if(!targetKey || !fZone || !hitLine) return;
 
     const noteDuration = nData.d || 400;
     const calculatedHeight = Math.max(80, (noteDuration / 8) * (currentSpeed / 3));
@@ -936,110 +976,65 @@ function drop(nData) {
     el.id = noteId;
     el.className = 'falling-note';
     
-    let baseColor, trailColor;
+    // Détermination de la couleur
     const noteBase = nData.note.replace(/[0-9#]/g, '');
-    
-    if (colorMode === 'expert') {
-        baseColor = '#ff4500';
-        trailColor = 'rgba(255, 100, 0, 0.9)';
-    } else if (colorMode === 'intermediaire') {
-        baseColor = '#00f5ff';
-        trailColor = 'rgba(0, 245, 255, 0.8)';
-    } else {
-        baseColor = noteColors[noteBase] || '#00f2ff';
-        trailColor = baseColor + 'CC';
-    }
+    let baseColor = noteColors[noteBase] || '#00f2ff';
+if (colorMode === 'expert') {
+    baseColor = '#ff0000'; // Rouge Lave
+    // On crée une couleur de traînée plus sombre, comme de la roche en fusion
+    trailColor = 'rgba(255, 60, 0, 0.8)'; 
+}
+    else if (colorMode === 'intermediaire') baseColor = '#00f5ff';
 
-el.style.cssText = `
-    position: absolute;
-    left: ${leftPos}px;
-    width: ${width}px;
-    height: ${calculatedHeight}px;
-    top: ${o.y}px;
-    border-radius: 15px 15px 8px 8px;
-    border: 2px solid rgba(255, 255, 255, 0.6);
-    border-bottom: 3px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 
-        0 0 20px ${baseColor}66,
-        0 0 40px ${baseColor}33,
-        inset 0 0 15px rgba(255, 255, 255, 0.3),
-        inset 0 -5px 10px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(180deg, 
-        rgba(255, 255, 255, 0.4) 0%,
-        ${baseColor}66 20%,
-        ${baseColor}44 50%,
-        ${baseColor}22 80%,
-        rgba(255, 255, 255, 0.1) 100%);
-    opacity: 0.6;
-    backdrop-filter: blur(2px);
-    z-index: 50;
-`;
+    // Style de la note (ton style actuel)
+    el.style.cssText = `
+        position: absolute;
+        left: ${leftPos}px;
+        width: ${width}px;
+        height: ${calculatedHeight}px;
+        top: ${o.y}px;
+        border-radius: 15px 15px 8px 8px;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, ${baseColor}66 100%);
+        z-index: 50;
+    `;
 
+    // Contenu (Doigté et Nom de note)
     const hand = nData.m || (parseInt(nData.note.slice(-1)) <= 3 ? 'G' : 'D');
     const finger = nData.f || 1;
     const displayNote = noteNamesFR[noteBase] || noteBase;
-
-    let noteContent = '';
     
-    if (colorMode === 'expert') {
-        noteContent = `
-            ${calculatedHeight > 100 ? `
-            <div style="position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
-                        width: 60%; height: 60%; 
-                        background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3), transparent);
-                        opacity: 0.5; pointer-events: none; filter: blur(1px);"></div>
-            ` : ''}
-            <div style="position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
-                        width: 80%; height: 20px; background: rgba(255,255,255,0.6);
-                        border-radius: 50%; filter: blur(3px); opacity: 0.8;"></div>
-        `;
-    } else {
-        noteContent = `
-            <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); 
-                        padding: 4px 12px; border-radius: 20px; font-size: 14px; z-index: 20;
-                        min-width: 30px; text-align: center; letter-spacing: 1px; font-weight: bold;
-                        background: ${baseColor}; color: #000; border: 2px solid white; 
-                        box-shadow: 0 0 15px ${baseColor}, 0 2px 5px rgba(0,0,0,0.3);">
-                ${hand}${finger}
-            </div>
-            
-            <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); 
-                        padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; 
-                        z-index: 20; background: rgba(255,255,255,0.95); color: #000; 
-                        border: 1px solid ${baseColor}; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
-                ${displayNote}${nData.note.includes('#') ? '#' : ''}
-            </div>
-            
-            ${calculatedHeight > 100 ? `
-            <div style="position: absolute; top: 30%; left: 50%; transform: translateX(-50%);
-                        width: 2px; height: 40%; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.8), transparent);
-                        opacity: 0.6; pointer-events: none;"></div>
-            ` : ''}
-        `;
-    }
+    el.innerHTML = colorMode === 'expert' ? '' : `
+        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 4px 12px; border-radius: 20px; background: ${baseColor}; color: #000; font-weight: bold; border: 2px solid white;">${hand}${finger}</div>
+        <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); padding: 3px 10px; border-radius: 12px; background: white; color: #000; font-weight: bold; border: 1px solid ${baseColor};">${displayNote}</div>
+    `;
 
-    el.innerHTML = noteContent;
     fZone.appendChild(el);
-
-    const hitLine = document.getElementById('hit-line');
-    const hitLineY = hitLine ? hitLine.offsetTop : (fZone.offsetHeight - 20);
+    const hitLineY = hitLine.offsetTop;
 
     const animate = () => {
         const currentEl = document.getElementById(noteId);
         if (!currentEl) return;
 
-        // Continue d'animer même si la note est jouée (o.ok = true)
         if(!isPaused || o.ok) {
             o.y += currentSpeed;
             currentEl.style.top = o.y + "px";
         }
         
         const bottomOfNote = o.y + o.h;
+
+        // --- SECTION AJOUTÉE : EFFET DE VAPEUR CONTINUE ---
+        // Si la note est validée (o.ok) et qu'elle traverse la ligne d'impact
+        if (o.ok && bottomOfNote >= hitLineY && o.y <= hitLineY + 20) {
+            const centerX = leftPos + (width / 2);
+            // On appelle ta fonction de vapeur
+            createContinuousSteam(centerX, hitLineY, baseColor);
+        }
+        // --------------------------------------------------
         
-if(currentMode === 'auto' && bottomOfNote >= hitLineY && !o.ok) { 
-    handleKeyPress(o.note, false);
-    // PAS DE return ici ! La note doit continuer de descendre
-}
+        if(currentMode === 'auto' && bottomOfNote >= hitLineY && !o.ok) { 
+            handleKeyPress(o.note, false);
+        }
         
         if(currentMode === 'step' && bottomOfNote >= hitLineY && !o.ok) { 
             isPaused = true; 
@@ -1047,7 +1042,6 @@ if(currentMode === 'auto' && bottomOfNote >= hitLineY && !o.ok) {
             currentEl.style.top = o.y + "px";
         }
 
-        // Supprimer seulement quand sorti en bas (sous le piano)
         if(o.y > fZone.offsetHeight + 200) {
             if(currentEl.parentNode) currentEl.remove();
             const idx = notesOnScreen.findIndex(n => n.id === noteId);
@@ -1059,7 +1053,6 @@ if(currentMode === 'auto' && bottomOfNote >= hitLineY && !o.ok) {
     
     requestAnimationFrame(animate);
 }
-
 function startGame(data, mode) {
     clearTimeout(gameLoopTimeout);
     const fZone = document.getElementById('fall-zone');
@@ -1336,18 +1329,41 @@ function toggleColorMode() {
         colorMode = 'intermediaire';
         btn.textContent = "Intermédiaire";
         btn.style.color = "#2196F3";
-    } else if (colorMode === 'intermediaire') {
-        colorMode = 'expert';
-        btn.textContent = "🔥 EXPERT";
-        btn.style.color = "#ff00ff";
-    } else {
+} else if (colorMode === 'intermediaire') {
+    colorMode = 'expert';
+    btn.textContent = "Expert"; // Nouveau nom
+    btn.style.color = "#ff0000"; 
+} else {
         colorMode = 'debutant';
         btn.textContent = "Débutant";
         btn.style.color = "var(--accent)";
     }
     initPiano();
 }
+function createNoteImpact(x, y, color) {
+    const fZone = document.getElementById('fall-zone');
+    if (!fZone) return;
+    const ring = document.createElement('div');
+    ring.className = 'impact-ring-massive';
+    ring.style.left = x + 'px';
+    ring.style.top = y + 'px';
+    ring.style.borderColor = color;
+    ring.style.boxShadow = `0 0 30px ${color}`;
+    fZone.appendChild(ring);
+    setTimeout(() => ring.remove(), 600);
+}
 
+function createContinuousSteam(x, y, color) {
+    const fZone = document.getElementById('fall-zone');
+    if (!fZone) return;
+    const steam = document.createElement('div');
+    steam.className = 'note-steam';
+    steam.style.left = (x + (Math.random() - 0.5) * 30) + 'px';
+    steam.style.top = y + 'px';
+    steam.style.backgroundColor = color;
+    fZone.appendChild(steam);
+    setTimeout(() => steam.remove(), 800);
+}
 // ==========================================
 // EXPORTS GLOBAUX - DERNIER BLOC DU FICHIER
 // ==========================================
